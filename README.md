@@ -2,4 +2,10 @@
 ### Trabajo de Programación Web
 
 Hecho por:
-David E. Vilela R.
+- Saghir Sied
+- Jeremin Roman
+- David Ramos
+- David Vilela
+- Jose Huari
+- Jose Misagel
+
