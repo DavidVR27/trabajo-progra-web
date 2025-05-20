@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Carrito from './Carrito';
 import Navbar from '../Inicio/Navbar';
-import './Checkout.css';
+import './CarritoPage.css';
 import Boton from '../../../Components/Boton';
 
 
-const Checkout = () => {
+const CarritoPage = () => {
     const [total, setTotal] = useState(0); // Estado para almacenar el total del carrito
   const [totalProductos, setTotalProductos] = useState(0); // Estado para almacenar el total de productos
   const [totalDescuento, setTotalDescuento] = useState(0); // Estado para almacenar el total de descuento
@@ -60,4 +60,4 @@ const Checkout = () => {
   );
 };
 
-export default Checkout;
+export default CarritoPage;

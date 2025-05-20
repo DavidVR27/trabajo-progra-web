@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Checkout from './pages/Tienda/Carrito/Checkout';
+import Checkout from './pages/Tienda/Checkout/Checkout';
 
 const App = () => {
   return (
