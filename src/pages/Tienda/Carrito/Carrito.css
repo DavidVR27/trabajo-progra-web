@@ -1,0 +1,16 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.carrito-container {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  min-height: 100vh; /* Ocupa toda la altura de la ventana */
+  background-color: white; /* Fondo blanco */
+  padding: 20px; /* Espaciado interno */
+  box-sizing: border-box; /* Incluye el padding en el tamaño total */
+}
