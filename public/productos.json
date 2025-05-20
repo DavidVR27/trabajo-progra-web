@@ -6,7 +6,8 @@
       "descripcion": "Arroz blanco de grano largo",
       "llegada": "Llega mañana",
       "precio": 2.5,
-      "descuento": 0.1
+      "descuento": 0.1,
+      "imagen": "https://vegaperu.vtexassets.com/arquivos/ids/165560/210001.jpg?v=638423078966730000"
     },
     {
       "id": 2,
@@ -14,7 +15,8 @@
       "descripcion": "Frijoles negros",
       "llegada": "Llega mañana",
       "precio": 3.0,
-      "descuento": 0.15
+      "descuento": 0.15,
+      "imagen": "https://plazavea.vteximg.com.br/arquivos/ids/27552442-418-418/3840.jpg"
     },
     {
       "id": 3,
@@ -22,7 +24,17 @@
       "descripcion": "Aceite de oliva extra virgen",
       "llegada": "Llega mañana",
       "precio": 5.0,
-      "descuento": 0.2
+      "descuento": 0.2,
+      "imagen": "https://wongfood.vtexassets.com/arquivos/ids/472953-800-auto?v=637677675135300000&width=800&height=auto&aspect=true"
+    },
+    {
+      "id": 4,
+      "nombre": "Leche Gloria",
+      "descripcion": "Presentación en 6 unidades",
+      "llegada": "Llega mañana",
+      "precio": 22.65,
+      "descuento": 0,
+      "imagen": "https://plazavea.vteximg.com.br/arquivos/ids/19457381-418-418/20289770.jpg"
     }
   ]
 }
