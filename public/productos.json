@@ -1,0 +1,28 @@
+{
+  "productos": [
+    {
+      "id": 1,
+      "nombre": "Arroz",
+      "descripcion": "Arroz blanco de grano largo",
+      "llegada": "Llega mañana",
+      "precio": 2.5,
+      "descuento": 0.1
+    },
+    {
+      "id": 2,
+      "nombre": "Frijoles",
+      "descripcion": "Frijoles negros",
+      "llegada": "Llega mañana",
+      "precio": 3.0,
+      "descuento": 0.15
+    },
+    {
+      "id": 3,
+      "nombre": "Aceite de Oliva",
+      "descripcion": "Aceite de oliva extra virgen",
+      "llegada": "Llega mañana",
+      "precio": 5.0,
+      "descuento": 0.2
+    }
+  ]
+}

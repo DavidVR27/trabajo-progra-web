@@ -9,18 +9,23 @@ body, html {
 
 .carrito-container {
   display: flex;
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente */
-  min-height: 100vh; /* Ocupa toda la altura de la ventana */
-  background-color: white; /* Fondo blanco */
-  padding: 20px; /* Espaciado interno */
-  box-sizing: border-box; /* Incluye el padding en el tamaño total */
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  padding: 20px;
+  box-sizing: border-box;
+  min-height: 100vh;
 }
 
-.descuentos {
-  color: #FC0000
+.productos-lista {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
 }
 
-.total-carrito {
-  font-weight: bold;
+.botones-cantidad {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
