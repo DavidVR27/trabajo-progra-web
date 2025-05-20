@@ -3,17 +3,20 @@ import Carrito from './Carrito';
 import './CarritoPage.css';
 import Boton from '../../../Components/Boton';
 import { useNavigate } from 'react-router-dom';
+import productosData from '../../../../public/productos.json';
 
 const CarritoPage = () => {
   const navigate = useNavigate();
   const [total, setTotal] = useState(0); // Estado para almacenar el total del carrito
   const [totalProductos, setTotalProductos] = useState(0); // Estado para almacenar el total de productos
   const [totalDescuento, setTotalDescuento] = useState(0); // Estado para almacenar el total de descuento
+  const [cantidadItems, setCantidadItems] = useState(productosData.productos.length);
 
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">Carrito de Compras</h1>
+        <h1 className="text-3xl font-bold mb-2">Carrito de Compras</h1>
+        <p className="text-gray-600 mb-6 text-xl">Tienes {cantidadItems} ítems</p>
 
         {/* Contenedor principal en fila siempre */}
         <div className="flex flex-row items-start gap-6">
@@ -24,6 +27,7 @@ const CarritoPage = () => {
                 actualizarTotal={setTotal} 
                 actualizarTotalProductos={setTotalProductos}
                 actualizarTotalDescuento={setTotalDescuento}
+                actualizarCantidadItems={setCantidadItems}
               />
             </div>
           </div>
@@ -34,21 +38,21 @@ const CarritoPage = () => {
               <h2 className="text-xl font-semibold mb-6">Resumen de la compra</h2>
               <div className="space-y-4">
                 <div className="flex justify-between text-gray-600">
-                  <span>Productos ({totalProductos})</span>
-                  <span>S/. {total.toFixed(2)}</span>
+                  <span>Subtotal ({totalProductos + " Productos"})</span>
+                  <span>S/ {total.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Descuento</span>
                   <span className="text-red-500 font-bold">-S/ {totalDescuento.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
-                  <span>Delivery</span>
+                  <span>Entrega</span>
                   <span className="text-green-500 font-bold">GRATIS</span>
                 </div>
-                <hr className="my-4 border-gray-300" />
+                <hr className="my-5 border-gray-200" />
                 <div className="flex justify-between text-gray-800 font-semibold text-xl">
-                  <span>Total</span>
-                  <span>S/ {total.toFixed(2)}</span>
+                  <span>TOTAL</span>
+                  <span>S/ {(total - totalDescuento).toFixed(2)}</span>
                 </div>
                 <div className="mt-6">
                   <Boton

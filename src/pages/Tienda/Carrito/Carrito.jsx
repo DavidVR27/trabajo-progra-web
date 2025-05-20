@@ -2,18 +2,19 @@ import React, { useState, useEffect } from 'react';
 import productosData from '../../../../public/productos.json'; // Importamos el JSON
 import Boton from '../../../Components/Boton';
 
-const Carrito = ({ actualizarTotal, actualizarTotalProductos }) => {
+const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDescuento, actualizarCantidadItems }) => {
   const [productos, setProductos] = useState(
     productosData.productos.map((producto) => ({ 
       ...producto, 
       cantidad: producto.cantidad || 1, 
-      checked: true 
+      checked: true,
+      precioConDescuento: producto.descuento ? producto.precio * (1 - producto.descuento) : producto.precio
     }))
   );
 
-  // Calcular el total del carrito
+  // Calcular el total del carrito con descuentos
   const total = productos.reduce(
-    (acc, producto) => acc + (producto.checked ? producto.precio * producto.cantidad : 0),
+    (acc, producto) => acc + (producto.checked ? producto.precioConDescuento * producto.cantidad : 0),
     0
   );
 
@@ -23,11 +24,19 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos }) => {
     0
   );
 
-  // Actualizar el total y el total de productos en el componente padre (Checkout.jsx)
+  // Calcular el total de descuentos
+  const totalDescuento = productos.reduce(
+    (acc, producto) => acc + (producto.checked ? (producto.precio - producto.precioConDescuento) * producto.cantidad : 0),
+    0
+  );
+
+  // Actualizar los totales en el componente padre
   useEffect(() => {
     actualizarTotal(total);
     actualizarTotalProductos(totalProductos);
-  }, [total, totalProductos, actualizarTotal, actualizarTotalProductos]);
+    actualizarTotalDescuento(totalDescuento);
+    actualizarCantidadItems(productos.filter(producto => producto.checked).length);
+  }, [total, totalProductos, totalDescuento, productos, actualizarTotal, actualizarTotalProductos, actualizarTotalDescuento, actualizarCantidadItems]);
 
   const toggleCheck = (id) => {
     setProductos((prevProductos) =>
@@ -75,7 +84,7 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos }) => {
           <div className="flex items-center mr-4">
             <input
               type="checkbox"
-              className="form-checkbox h-5 w-5 text-green-500 mr-2"
+              className="form-checkbox h-5 w-5 text-[#6B6B6B] mr-2 accent-[#6B6B6B] checked:bg-[#6B6B6B] checked:border-[#6B6B6B]"
               checked={producto.checked}
               onChange={() => toggleCheck(producto.id)}
             />
@@ -84,7 +93,19 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos }) => {
           <div className="flex-grow">
             <div className="flex items-center justify-between w-full">
               <h2 className="text-lg font-bold">{producto.nombre}</h2>
-              <p className="text-gray-600 font-bold text-xl">S/ {producto.precio}</p>
+              <div className="text-right">
+                {producto.descuento ? (
+                  <>
+                    <p className="text-gray-400 line-through text-sm">S/ {producto.precio.toFixed(2)}</p>
+                    <div className="flex items-center justify-end gap-2">
+                      <p className="text-red-500 font-bold text-xl">S/ {producto.precioConDescuento.toFixed(2)}</p>
+                      <p className="text-red-500 text-sm bg-red-100 px-2 py-1 rounded">-{Math.round(producto.descuento * 100)}%</p>
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-gray-600 font-bold text-xl">S/ {producto.precio.toFixed(2)}</p>
+                )}
+              </div>
             </div>
             <p className="text-gray-600">{producto.descripcion}</p>
             <p className="text-[#FE624C] font-bold">{producto.llegada}</p>
