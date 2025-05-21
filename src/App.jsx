@@ -20,7 +20,6 @@ const App = () => {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/carritopage" element={<CarritoPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
-            <h1>Hola mundo</h1>
           </Routes>
         </div>
       </div>
