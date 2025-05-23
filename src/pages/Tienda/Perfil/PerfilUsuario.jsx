@@ -1,20 +1,42 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const PerfilUsuario = () => {
+  const navigate = useNavigate();
   const [usuario, setUsuario] = useState({ nombre: '', apellido: '', correo: '', password: '' });
   const [editando, setEditando] = useState(false);
   const [nuevoPassword, setNuevoPassword] = useState('');
 
   useEffect(() => {
-    const usuarioGuardado = JSON.parse(localStorage.getItem('usuario')) || { nombre: '', apellido: '', correo: '', password: '' };
-    setUsuario(usuarioGuardado);
-  }, []);
+    let usuarioGuardado = null;
+    try {
+      usuarioGuardado = JSON.parse(localStorage.getItem('usuario'));
+    } catch (e) {
+      // Si el valor no es JSON válido, limpiar y redirigir
+      localStorage.removeItem('usuario');
+      alert('Debes iniciar sesión para ver tu perfil');
+      navigate('/login');
+      return;
+    }
+    if (!usuarioGuardado || !usuarioGuardado.correo) {
+      alert('Debes iniciar sesión para ver tu perfil');
+      navigate('/login');
+      return;
+    }
+    setUsuario({
+      nombre: usuarioGuardado.nombre || '',
+      apellido: usuarioGuardado.apellido || '',
+      correo: usuarioGuardado.correo || '',
+      password: usuarioGuardado.password || ''
+    });
+  }, [navigate]);
 
   const handleChange = (e) => {
     setUsuario({ ...usuario, [e.target.name]: e.target.value });
   };
 
   const handleGuardar = () => {
+    // Solo se puede editar el usuario logueado
     localStorage.setItem('usuario', JSON.stringify(usuario));
     setEditando(false);
     alert('Datos actualizados correctamente');
@@ -63,9 +85,8 @@ const PerfilUsuario = () => {
             type="email"
             name="correo"
             value={usuario.correo}
-            onChange={handleChange}
-            disabled={!editando}
-            className="w-full p-2 border rounded"
+            disabled
+            className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
           />
         </div>
         {editando ? (

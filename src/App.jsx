@@ -22,6 +22,8 @@ import ListaCategoria from './pages/Admin/ListaCategoria';
 import ListaUsuarios from './pages/Admin/ListaUsuarios';
 import DetalleUsuario from './pages/Admin/DetalleUsuario';
 import ProductosPorCategoria from './pages/Tienda/Categorias/ProductosPorCategoria';
+import ProductosTienda from './pages/Tienda/Inicio/ProductosTienda';
+import EditarCategoria from './pages/Admin/EditarCategoria';
 
 const App = () => {
   return (
@@ -41,6 +43,7 @@ const App = () => {
             <Route path="/confirmacion-orden" element={<ConfirmacionOrden />} />
             <Route path="/historial-pedidos" element={<HistorialPedidos />} />
             <Route path="/perfil" element={<PerfilUsuario />} />
+            <Route path="/productos" element={<ProductosTienda />} />
             {/* Rutas de administración */}
             <Route path="/admin/lista-producto" element={<ListaProducto />} />
             <Route path="/admin/editar-producto/:id" element={<EditarProducto />} />
@@ -52,6 +55,7 @@ const App = () => {
             <Route path="/admin/lista-usuarios" element={<ListaUsuarios />} />
             <Route path="/admin/detalle-usuario/:id" element={<DetalleUsuario />} />
             <Route path="/categoria/:nombreCategoria" element={<ProductosPorCategoria />} />
+            <Route path="/admin/editar-categoria/:id" element={<EditarCategoria />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>

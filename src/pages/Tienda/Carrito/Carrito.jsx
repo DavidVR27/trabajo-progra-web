@@ -135,14 +135,14 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
                   <div className="text-right">
                     {producto.descuento ? (
                       <>
-                        <p className="text-gray-400 line-through text-sm">S/ {producto.precio.toFixed(2)}</p>
+                        <p className="text-gray-400 line-through text-sm">S/ {Number(producto.precio).toFixed(2)}</p>
                         <div className="flex items-center justify-end gap-2">
-                          <p className="text-red-500 font-bold text-xl">S/ {producto.precioConDescuento.toFixed(2)}</p>
+                          <p className="text-red-500 font-bold text-xl">S/ {Number(producto.precioConDescuento).toFixed(2)}</p>
                           <p className="text-red-500 text-sm bg-red-100 px-2 py-1 rounded">-{Math.round(producto.descuento * 100)}%</p>
                         </div>
                       </>
                     ) : (
-                      <p className="text-gray-600 font-bold text-xl">S/ {producto.precio.toFixed(2)}</p>
+                      <p className="text-gray-600 font-bold text-xl">S/ {Number(producto.precio).toFixed(2)}</p>
                     )}
                   </div>
                 </div>
@@ -202,14 +202,14 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
                   <div className="text-right">
                     {producto.descuento ? (
                       <>
-                        <p className="text-gray-400 line-through text-sm">S/ {producto.precio.toFixed(2)}</p>
+                        <p className="text-gray-400 line-through text-sm">S/ {Number(producto.precio).toFixed(2)}</p>
                         <div className="flex items-center justify-end gap-2">
-                          <p className="text-red-500 font-bold text-xl">S/ {producto.precioConDescuento.toFixed(2)}</p>
+                          <p className="text-red-500 font-bold text-xl">S/ {Number(producto.precioConDescuento).toFixed(2)}</p>
                           <p className="text-red-500 text-sm bg-red-100 px-2 py-1 rounded">-{Math.round(producto.descuento * 100)}%</p>
                         </div>
                       </>
                     ) : (
-                      <p className="text-gray-600 font-bold text-xl">S/ {producto.precio.toFixed(2)}</p>
+                      <p className="text-gray-600 font-bold text-xl">S/ {Number(producto.precio).toFixed(2)}</p>
                     )}
                   </div>
                 </div>

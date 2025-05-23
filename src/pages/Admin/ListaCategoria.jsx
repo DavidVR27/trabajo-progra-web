@@ -42,7 +42,7 @@ const ListaCategoria = () => {
                 <td className="py-2 px-4 border-b">{cat.nombre}</td>
                 <td className="py-2 px-4 border-b">{cat.descripcion}</td>
                 <td className="py-2 px-4 border-b flex gap-2">
-                  {/* Aquí podrías agregar edición en el futuro */}
+                  <button onClick={() => navigate(`/admin/editar-categoria/${cat.id}`)} className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">Editar</button>
                   <button onClick={() => handleEliminar(cat.id)} className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Eliminar</button>
                 </td>
               </tr>

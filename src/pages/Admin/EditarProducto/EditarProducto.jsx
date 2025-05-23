@@ -6,6 +6,8 @@ const EditarProducto = () => {
   const navigate = useNavigate();
   const [nombre, setNombre] = useState('');
   const [precio, setPrecio] = useState('');
+  const [categoria, setCategoria] = useState('');
+  const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
     const productos = JSON.parse(localStorage.getItem('productos') || '[]');
@@ -13,18 +15,23 @@ const EditarProducto = () => {
     if (producto) {
       setNombre(producto.nombre);
       setPrecio(producto.precio);
+      setCategoria(producto.categoria || '');
     }
+
+    // Cargar categorías
+    const categoriasGuardadas = JSON.parse(localStorage.getItem('categorias') || '[]');
+    setCategorias(categoriasGuardadas);
   }, [id]);
 
   const handleGuardar = (e) => {
     e.preventDefault();
-    if (!nombre || !precio) {
+    if (!nombre || !precio || !categoria) {
       alert('Completa todos los campos');
       return;
     }
     const productos = JSON.parse(localStorage.getItem('productos') || '[]');
     const nuevosProductos = productos.map(p =>
-      p.id === id ? { ...p, nombre, precio: parseFloat(precio).toFixed(2) } : p
+      p.id === id ? { ...p, nombre, precio: parseFloat(precio).toFixed(2), categoria } : p
     );
     localStorage.setItem('productos', JSON.stringify(nuevosProductos));
     alert('Producto actualizado correctamente');
@@ -54,6 +61,21 @@ const EditarProducto = () => {
             onChange={e => setPrecio(e.target.value)}
             className="w-full p-2 border rounded"
           />
+        </div>
+        <div className="mb-4">
+          <label className="block font-semibold mb-1">Categoría:</label>
+          <select
+            value={categoria}
+            onChange={e => setCategoria(e.target.value)}
+            className="w-full p-2 border rounded"
+          >
+            <option value="">Seleccione una categoría</option>
+            {categorias.map((cat, index) => (
+              <option key={index} value={cat.nombre}>
+                {cat.nombre}
+              </option>
+            ))}
+          </select>
         </div>
         <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Guardar cambios</button>
       </form>

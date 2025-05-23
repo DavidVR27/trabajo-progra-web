@@ -19,9 +19,15 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Aquí iría la lógica de autenticación
-        // Por ahora, solo guardamos el email en localStorage
-        localStorage.setItem('usuario', formData.email);
+        // Buscar el usuario en la lista de usuarios
+        const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+        const usuario = usuarios.find(u => u.correo === formData.email && u.password === formData.password);
+        if (!usuario) {
+            alert('Correo o contraseña incorrectos');
+            return;
+        }
+        // Guardar el usuario completo en localStorage
+        localStorage.setItem('usuario', JSON.stringify(usuario));
         navigate('/');
     };
 

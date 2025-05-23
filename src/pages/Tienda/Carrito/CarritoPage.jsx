@@ -3,14 +3,26 @@ import Carrito from './Carrito';
 import './CarritoPage.css';
 import Boton from '../../../Components/Boton';
 import { useNavigate } from 'react-router-dom';
-import productosData from '../../../../public/productos.json';
 
 const CarritoPage = () => {
   const navigate = useNavigate();
+  // Usar el carrito real de localStorage
+  const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
   const [total, setTotal] = useState(0); // Estado para almacenar el total del carrito
   const [totalProductos, setTotalProductos] = useState(0); // Estado para almacenar el total de productos
   const [totalDescuento, setTotalDescuento] = useState(0); // Estado para almacenar el total de descuento
-  const [cantidadItems, setCantidadItems] = useState(productosData.productos.length);
+  const [cantidadItems, setCantidadItems] = useState(carrito.length);
+
+  // Nuevo: verificar si el carrito está vacío
+  const carritoVacio = !carrito || carrito.length === 0;
+
+  if (carritoVacio) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="text-3xl font-bold text-gray-500">Carrito vacío</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">

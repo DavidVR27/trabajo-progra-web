@@ -1,81 +1,172 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-
-// Datos simulados
-const categorias = ['Alimentos', 'Bebidas', 'Limpieza'];
-const productos = Array.from({ length: 30 }, (_, i) => ({
-  id: i + 1,
-  nombre: `Producto ${i + 1}`,
-  categoria: categorias[i % categorias.length],
-  precio: (10 + i * 2).toFixed(2),
-  imagen: 'https://via.placeholder.com/100',
-}));
-
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
+import React, { useState, useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import Boton from '../../../Components/Boton';
 
 const Busqueda = () => {
-  const query = useQuery();
-  const [termino, setTermino] = useState(query.get('q') || localStorage.getItem('busqueda') || '');
-  const [orden, setOrden] = useState(localStorage.getItem('orden') || 'nombre');
-  const [categoria, setCategoria] = useState(localStorage.getItem('categoria') || '');
-  const [resultados, setResultados] = useState([]);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [productos, setProductos] = useState([]);
+  const [productosFiltrados, setProductosFiltrados] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const [filtros, setFiltros] = useState({
+    categoria: '',
+    precioMin: '',
+    precioMax: '',
+    ordenarPor: 'nombre'
+  });
 
   useEffect(() => {
-    // Guardar filtros en localStorage
-    localStorage.setItem('busqueda', termino);
-    localStorage.setItem('orden', orden);
-    localStorage.setItem('categoria', categoria);
-  }, [termino, orden, categoria]);
+    // Cargar productos y categorías desde localStorage
+    const productosGuardados = JSON.parse(localStorage.getItem('productos') || '[]');
+    const categoriasGuardadas = JSON.parse(localStorage.getItem('categorias') || '[]');
+    
+    setProductos(productosGuardados);
+    setCategorias(categoriasGuardadas);
+  }, []);
 
   useEffect(() => {
-    let filtrados = productos.filter(p =>
-      (!termino || p.nombre.toLowerCase().includes(termino.toLowerCase())) &&
-      (!categoria || p.categoria === categoria)
+    const query = searchParams.get('q')?.toLowerCase() || '';
+    
+    let filtrados = productos.filter(producto => 
+      producto.nombre.toLowerCase().includes(query) ||
+      (producto.descripcion && producto.descripcion.toLowerCase().includes(query))
     );
-    if (orden === 'precio') {
-      filtrados = filtrados.sort((a, b) => a.precio - b.precio);
-    } else {
-      filtrados = filtrados.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+    // Aplicar filtros
+    if (filtros.categoria) {
+      filtrados = filtrados.filter(p => p.categoria === filtros.categoria);
     }
-    setResultados(filtrados);
-  }, [termino, orden, categoria]);
+    if (filtros.precioMin) {
+      filtrados = filtrados.filter(p => parseFloat(p.precio) >= parseFloat(filtros.precioMin));
+    }
+    if (filtros.precioMax) {
+      filtrados = filtrados.filter(p => parseFloat(p.precio) <= parseFloat(filtros.precioMax));
+    }
+
+    // Ordenar resultados
+    filtrados.sort((a, b) => {
+      switch (filtros.ordenarPor) {
+        case 'precio-asc':
+          return parseFloat(a.precio) - parseFloat(b.precio);
+        case 'precio-desc':
+          return parseFloat(b.precio) - parseFloat(a.precio);
+        case 'nombre':
+        default:
+          return a.nombre.localeCompare(b.nombre);
+      }
+    });
+
+    setProductosFiltrados(filtrados);
+  }, [searchParams, productos, filtros]);
+
+  const handleFiltroChange = (e) => {
+    const { name, value } = e.target;
+    setFiltros(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-4">Resultados de búsqueda</h1>
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-        <input
-          type="text"
-          value={termino}
-          onChange={e => setTermino(e.target.value)}
-          placeholder="Buscar productos..."
-          className="p-2 border border-gray-300 rounded w-full md:w-1/3"
-        />
-        <select value={orden} onChange={e => setOrden(e.target.value)} className="p-2 border rounded">
-          <option value="nombre">Ordenar por nombre</option>
-          <option value="precio">Ordenar por precio</option>
-        </select>
-        <select value={categoria} onChange={e => setCategoria(e.target.value)} className="p-2 border rounded">
-          <option value="">Todas las categorías</option>
-          {categorias.map(cat => (
-            <option key={cat} value={cat}>{cat}</option>
-          ))}
-        </select>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {resultados.length === 0 ? (
-          <div className="col-span-full text-center text-gray-500">No se encontraron productos.</div>
-        ) : (
-          resultados.map(prod => (
-            <div key={prod.id} className="bg-white rounded shadow p-4 flex flex-col items-center">
-              <img src={prod.imagen} alt={prod.nombre} className="w-20 h-20 object-cover mb-2" />
-              <div className="font-semibold">{prod.nombre}</div>
-              <div className="text-[#FE624C] font-bold">S/ {prod.precio}</div>
+      <h1 className="text-2xl font-bold mb-6">
+        Resultados de búsqueda: {searchParams.get('q')}
+      </h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {/* Filtros */}
+        <div className="bg-white p-4 rounded shadow">
+          <h2 className="font-semibold mb-4">Filtros</h2>
+          
+          {/* Filtro por categoría */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Categoría
+            </label>
+            <select
+              name="categoria"
+              value={filtros.categoria}
+              onChange={handleFiltroChange}
+              className="w-full p-2 border rounded"
+            >
+              <option value="">Todas las categorías</option>
+              {categorias.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Filtro por precio */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Rango de Precio
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="number"
+                name="precioMin"
+                value={filtros.precioMin}
+                onChange={handleFiltroChange}
+                placeholder="Mín"
+                className="w-full p-2 border rounded"
+              />
+              <input
+                type="number"
+                name="precioMax"
+                value={filtros.precioMax}
+                onChange={handleFiltroChange}
+                placeholder="Máx"
+                className="w-full p-2 border rounded"
+              />
             </div>
-          ))
-        )}
+          </div>
+
+          {/* Ordenar por */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Ordenar por
+            </label>
+            <select
+              name="ordenarPor"
+              value={filtros.ordenarPor}
+              onChange={handleFiltroChange}
+              className="w-full p-2 border rounded"
+            >
+              <option value="nombre">Nombre</option>
+              <option value="precio-asc">Precio: Menor a Mayor</option>
+              <option value="precio-desc">Precio: Mayor a Menor</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Lista de productos */}
+        <div className="md:col-span-3">
+          {productosFiltrados.length === 0 ? (
+            <div className="text-center text-gray-500 py-8">
+              No se encontraron productos que coincidan con tu búsqueda.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {productosFiltrados.map((producto) => (
+                <div key={producto.id} className="bg-white rounded shadow p-4">
+                  <img
+                    src={producto.imagen || 'https://via.placeholder.com/200'}
+                    alt={producto.nombre}
+                    className="w-full h-48 object-cover rounded mb-4"
+                  />
+                  <h3 className="font-semibold mb-2">{producto.nombre}</h3>
+                  {producto.categoria && (
+                    <div className="text-sm text-gray-500 mb-2">{producto.categoria}</div>
+                  )}
+                  <div className="text-[#FE624C] font-bold mb-4">S/ {producto.precio}</div>
+                  <Boton onClick={() => navigate(`/detalle-producto/${producto.id}`)}>
+                    Ver Detalle
+                  </Boton>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
