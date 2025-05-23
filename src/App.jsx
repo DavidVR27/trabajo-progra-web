@@ -7,6 +7,7 @@ import Inicio from './pages/Tienda/Inicio/Inicio';
 import Navbar from './pages/Tienda/Inicio/Navbar';
 import CarritoPage from './pages/Tienda/Carrito/CarritoPage';
 import Direccion from './pages/Tienda/Checkout/Direccion';
+import Pago from './pages/Tienda/Checkout/Pago';
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
             <Route path="/carritopage" element={<CarritoPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
             <Route path="/tienda/checkout/direccion" element={<Direccion />} />
+            <Route path="/tienda/checkout/pago" element={<Pago />} />
           </Routes>
         </div>
       </div>

@@ -59,7 +59,7 @@ const Direccion = () => {
             // Guardar datos de dirección en localStorage
             localStorage.setItem('datosEnvio', JSON.stringify(formData));
             // Navegar a la página de método de pago
-            navigate('/checkout/pago');
+            navigate('/tienda/checkout/pago');
         }
     };
 
