@@ -84,29 +84,6 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
     );
   };
 
-  // Guardar para después
-  const moverAGuardados = (id) => {
-    setProductos((prevProductos) => {
-      const prod = prevProductos.find(p => p.id === id);
-      if (prod) setGuardados(prev => [...prev, prod]);
-      return prevProductos.filter(p => p.id !== id);
-    });
-  };
-
-  // Devolver al carrito
-  const devolverAlCarrito = (id) => {
-    setGuardados((prevGuardados) => {
-      const prod = prevGuardados.find(p => p.id === id);
-      if (prod) setProductos(prev => [...prev, prod]);
-      return prevGuardados.filter(p => p.id !== id);
-    });
-  };
-
-  // Eliminar de guardados
-  const eliminarGuardado = (id) => {
-    setGuardados((prevGuardados) => prevGuardados.filter(p => p.id !== id));
-  };
-
   return (
     <div className="flex flex-col space-y-8">
       {/* Carrito */}
@@ -165,64 +142,8 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
                       className="px-3 py-1 ml-2"
                     />
                   </div>
-                  <Boton
-                    onClick={() => moverAGuardados(producto.id)}
-                    texto={"Guardar para después"}
-                    className="ml-2 px-3 py-1 bg-yellow-400 hover:bg-yellow-500 text-white"
-                  />
                   <button
                     onClick={() => eliminarProducto(producto.id)}
-                    className="text-red-500 hover:text-red-700 ml-2"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-      {/* Guardados para después */}
-      <div>
-        <h2 className="text-xl font-bold mb-2">Guardados para después</h2>
-        {guardados.length === 0 ? (
-          <div className="text-center text-gray-500">No hay productos guardados para después.</div>
-        ) : (
-          guardados.map((producto) => (
-            <div
-              key={producto.id}
-              className="bg-gray-100 shadow rounded-lg p-4 flex items-start w-full mb-2"
-            >
-              <img src={producto.imagen} alt={producto.nombre} className="w-24 h-24 object-cover rounded-md mr-4" />
-              <div className="flex-grow">
-                <div className="flex items-center justify-between w-full">
-                  <h2 className="text-lg font-bold">{producto.nombre}</h2>
-                  <div className="text-right">
-                    {producto.descuento ? (
-                      <>
-                        <p className="text-gray-400 line-through text-sm">S/ {Number(producto.precio).toFixed(2)}</p>
-                        <div className="flex items-center justify-end gap-2">
-                          <p className="text-red-500 font-bold text-xl">S/ {Number(producto.precioConDescuento).toFixed(2)}</p>
-                          <p className="text-red-500 text-sm bg-red-100 px-2 py-1 rounded">-{Math.round(producto.descuento * 100)}%</p>
-                        </div>
-                      </>
-                    ) : (
-                      <p className="text-gray-600 font-bold text-xl">S/ {Number(producto.precio).toFixed(2)}</p>
-                    )}
-                  </div>
-                </div>
-                <p className="text-gray-600">{producto.descripcion}</p>
-                {producto.llegada && <p className="text-[#FE624C] font-bold">{producto.llegada}</p>}
-                <div className="flex items-center mt-4 gap-2">
-                  <Boton
-                    onClick={() => devolverAlCarrito(producto.id)}
-                    texto={"Regresar al carrito"}
-                    className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white"
-                  />
-                  <button
-                    onClick={() => eliminarGuardado(producto.id)}
                     className="text-red-500 hover:text-red-700 ml-2"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
