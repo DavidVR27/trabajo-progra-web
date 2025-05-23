@@ -2,7 +2,7 @@
 ### Trabajo de Programación Web
 
 Integrantes - Grupo 3:
-- Saghir Sied
+- Saghir Syed
 - Jeremin Roman
 - David Ramos
 - David Vilela
