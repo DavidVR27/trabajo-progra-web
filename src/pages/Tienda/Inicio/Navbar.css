@@ -45,3 +45,46 @@
 .navbar-links li a:hover {
   text-decoration: underline;
 }
+
+/* Dropdown de categorías */
+.navbar-categorias-dropdown {
+  position: relative;
+}
+
+.navbar-categorias-dropdown .dropdown-menu {
+  display: none;
+  position: absolute;
+  background: white;
+  color: #FE624C;
+  min-width: 150px;
+  z-index: 1100;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  top: 100%;
+  left: 0;
+}
+
+.navbar-categorias-dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu li {
+  padding: 8px 16px;
+}
+
+.dropdown-menu li:hover {
+  background: #ffe0d1;
+}
+
+.dropdown-menu li a {
+  color: #FE624C;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-menu li a:hover {
+  text-decoration: underline;
+}
