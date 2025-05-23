@@ -57,7 +57,7 @@ const CarritoPage = () => {
                 <div className="mt-6">
                   <Boton
                     texto="Proceder al Pago"
-                    onClick={() => navigate('/checkout')} 
+                    onClick={() => navigate('/tienda/checkout/direccion')} 
                     className="w-full py-3 text-lg"
                   />
                 </div>

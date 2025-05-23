@@ -6,6 +6,7 @@ import Registro from './pages/Auth/Registro/Registro';
 import Inicio from './pages/Tienda/Inicio/Inicio';
 import Navbar from './pages/Tienda/Inicio/Navbar';
 import CarritoPage from './pages/Tienda/Carrito/CarritoPage';
+import Direccion from './pages/Tienda/Checkout/Direccion';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/carritopage" element={<CarritoPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="/tienda/checkout/direccion" element={<Direccion />} />
           </Routes>
         </div>
       </div>
