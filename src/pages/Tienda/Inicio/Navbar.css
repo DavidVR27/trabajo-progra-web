@@ -1,0 +1,90 @@
+/* Estilos generales del navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #FE624C;
+  padding: 10px 20px;
+  color: white;
+  font-family: Arial, sans-serif;
+
+  /* Posiciona el navbar en la parte superior izquierda */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%; /* Asegura que ocupe todo el ancho de la página */
+  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+}
+
+/* Sección izquierda */
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links li a {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+}
+
+.navbar-links li a:hover {
+  text-decoration: underline;
+}
+
+/* Dropdown de categorías */
+.navbar-categorias-dropdown {
+  position: relative;
+}
+
+.navbar-categorias-dropdown .dropdown-menu {
+  display: none;
+  position: absolute;
+  background: white;
+  color: #FE624C;
+  min-width: 150px;
+  z-index: 1100;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  top: 100%;
+  left: 0;
+}
+
+.navbar-categorias-dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu li {
+  padding: 8px 16px;
+}
+
+.dropdown-menu li:hover {
+  background: #ffe0d1;
+}
+
+.dropdown-menu li a {
+  color: #FE624C;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-menu li a:hover {
+  text-decoration: underline;
+}
