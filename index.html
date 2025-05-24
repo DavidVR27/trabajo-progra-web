@@ -3,11 +3,122 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel = "stylesheet" href = "indexStyle.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mi-Tiendita</title>
   </head>
   <body>
     <div id="root"></div>
+
+    <header class = "header">
+      <section class = "section__first">
+        <div class="firstSection__item"> Mi-Tiendita </div>
+        <div class="firstSection__item">
+          <label class="section__label">
+            <input type="text" placeholder="Buscar un producto...">
+          </label>
+        </div>
+        <div class="firstSection__item">
+          <div class="firstSection__subfirst"> Carrito 🛒 </div>
+          <div class="firstSection__subsecond"> Usuario 👤 </div> 
+        </div>
+      </section>
+
+
+      <nav class="header__nav">
+        
+        <ul>
+          <li class="header__nav-item">
+            <input type="checkbox" class="header__categories-option" id="categories-options">
+            <label for="categories-options" class="header__categories-box" role="button"> = Categorias </label>
+            
+            <div class = "header__categories-options" id="categories-products"> 
+                <button class="header__button" onclick="mostrarProductos('desayuno')"> Desayuno </button>
+                <button class="header__button" onclick="mostrarProductos('complementos')"> Complementos </button>
+                <button class="header__button" onclick="mostrarProductos('insumos')"> Insumos </button>
+                <button class="header__button" onclick="mostrarProductos('otros')"> Otros </button>
+            </div>
+          </li>
+
+          <li class="header__nav-item">
+            <a href="#"> Productos </a>
+          </li>
+
+          <li class="header__nav-item">
+            <a href="#"> Nosotros </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id = "main">
+      <section class="section__categories">
+        <h2> Explora las categorias </h2>
+        <div class="images-container" id="products-section"></div>
+      </section>
+
+      <section class="section__best-sellers">
+        <h2> Lo más vendido</h2>
+        <div class="images-container" id="products-best-sellers"></div>
+
+      </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer__item">
+          <span class="footer__item-title"> Siguenos </span>
+          <ul>
+            
+          </ul>
+        </div>
+
+        <div class="footer__item">
+          <span class="footer__item-title"> Nosotros </span>
+          <ul>
+              <li class="footer__item-list">
+                <a href="#"> Conócenos </a>
+              </li>
+              <li class="footer__item-list">
+                <a href="#"> Responsabilidad Social </a>
+              </li>
+              <li class="footer__item-list"> 
+                <a href="#"> Nuestras tiendas </a>
+              </li>
+          </ul>
+        </div>
+
+        <div class="footer__item">
+          <span class="footer__item-title"> Atención al cliente </span>
+          <ul>
+            <li class="footer__item-list"> 
+              <a href="#"> Atención al cliente </a>
+            </li>
+            <li class="footer__item-list">
+              <a href="#"> Horarios de atención </a>
+            </li>
+            <li class="footer__item-list">
+              <a href="#"> Preguntas frecuentes </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer__item">
+          <span class="footer__item-title"> Políticas y condiciones </span>
+          <ul>
+            <li class="footer__item-list">
+              <a href="#"> Política de datos personales </a>
+            </li>
+            <li class="footer__item-list">
+              <a href="#"> Condición de promociones </a>
+            </li>
+            <li class="footer__item-list">
+              <a href="#"> Términos y condiciones </a>
+            </li>
+          </ul>
+        </div>
+    </footer>
+
     <script type="module" src="/src/main.jsx"></script>
+    <script src = "indesxScript.js"></script>
   </body>
 </html>
