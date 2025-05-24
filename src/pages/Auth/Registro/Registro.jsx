@@ -22,14 +22,44 @@ const Registro = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         
+        // Validar formato de correo
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            alert('Por favor, ingresa un correo electrónico válido.');
+            return;
+        }
+
+        // Validar longitud mínima de contraseña
+        if (formData.password.length < 8) {
+            alert('La contraseña debe tener al menos 8 caracteres.');
+            return;
+        }
+
         if (formData.password !== formData.confirmPassword) {
             alert('Las contraseñas no coinciden');
             return;
         }
 
-        // Aquí iría la lógica de registro
-        // Por ahora, solo guardamos el email en localStorage
+        // Validar que el correo no esté registrado
+        const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+        if (usuarios.some(u => u.correo === formData.email)) {
+            alert('El correo ya está registrado. Usa otro o inicia sesión.');
+            return;
+        }
+
+        // Guardar el usuario actual en localStorage
         localStorage.setItem('usuario', formData.email);
+
+        // Agregar el usuario a la lista de usuarios
+        usuarios.push({
+            id: Date.now().toString(),
+            nombre: formData.nombre,
+            correo: formData.email,
+            password: formData.password,
+            activo: true
+        });
+        localStorage.setItem('usuarios', JSON.stringify(usuarios));
+
         navigate('/');
     };
 
