@@ -41,7 +41,7 @@ const Dashboard = () => {
       </div>
       <div className="flex flex-wrap gap-4 justify-center">
         <Link to="/admin/lista-producto" className="px-6 py-3 bg-blue-500 text-white rounded shadow hover:bg-blue-600">Gestionar Productos</Link>
-        <Link to="/admin/lista-categorias" className="px-6 py-3 bg-green-500 text-white rounded shadow hover:bg-green-600">Gestionar Categorías</Link>
+        <Link to="/admin/crear-categoria" className="px-6 py-3 bg-green-500 text-white rounded shadow hover:bg-green-600">Gestionar Categorías</Link>
         <Link to="/admin/lista-usuarios" className="px-6 py-3 bg-purple-500 text-white rounded shadow hover:bg-purple-600">Gestionar Usuarios</Link>
       </div>
     </div>
