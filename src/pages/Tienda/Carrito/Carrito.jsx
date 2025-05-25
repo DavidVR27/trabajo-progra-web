@@ -9,6 +9,8 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
   // Cargar datos del carrito al iniciar
   useEffect(() => {
     const cargados = carritoService.obtenerCarrito();
+    const guardados = carritoService.obtenerGuardados();
+    
     const formateados = cargados.map(producto => ({
       ...producto,
       checked: producto.checked !== undefined ? producto.checked : true,
@@ -20,7 +22,21 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
       nombre: producto.nombre || 'Producto sin nombre',
       descripcion: producto.descripcion || ''
     }));
+
+    const formateadosGuardados = guardados.map(producto => ({
+      ...producto,
+      checked: producto.checked !== undefined ? producto.checked : true,
+      cantidad: producto.cantidad || 1,
+      precio: producto.precio || 0,
+      descuento: producto.descuento || 0,
+      precioConDescuento: producto.descuento ? (producto.precio || 0) * (1 - producto.descuento) : (producto.precio || 0),
+      imagen: producto.imagen || 'https://via.placeholder.com/100',
+      nombre: producto.nombre || 'Producto sin nombre',
+      descripcion: producto.descripcion || ''
+    }));
+
     setProductos(formateados);
+    setGuardados(formateadosGuardados);
   }, []);
 
   // Actualizar carrito en localStorage solo cuando se modifica un producto específico
@@ -80,23 +96,20 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
   };
 
   const moverAGuardados = (id) => {
-    setProductos(prev => {
-      const producto = prev.find(p => p.id === id);
-      if (producto) setGuardados(g => [...g, producto]);
-      return prev.filter(p => p.id !== id);
-    });
+    const { carrito, guardados } = carritoService.moverAGuardados(id);
+    setProductos(carrito);
+    setGuardados(guardados);
   };
 
   const devolverAlCarrito = (id) => {
-    setGuardados(prev => {
-      const producto = prev.find(p => p.id === id);
-      if (producto) setProductos(p => [...p, producto]);
-      return prev.filter(p => p.id !== id);
-    });
+    const { carrito, guardados } = carritoService.devolverAlCarrito(id);
+    setProductos(carrito);
+    setGuardados(guardados);
   };
 
   const eliminarGuardado = (id) => {
-    setGuardados(prev => prev.filter(p => p.id !== id));
+    const nuevosGuardados = carritoService.eliminarGuardado(id);
+    setGuardados(nuevosGuardados);
   };
 
   return (

@@ -96,9 +96,13 @@ const Inicio = () => {
         {/* Acciones rápidas */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-semibold mb-4">Acciones Rápidas</h2>
-          <div className="space-y-4">
-            <Link to="/carritopage"><Boton texto="Ir al Carrito" className="w-full" /></Link>
-            <Link to="/productos"><Boton texto="Ver Productos" className="w-full" /></Link>
+          <div className="flex flex-col gap-10">
+            <Link to="/carritopage">
+              <Boton texto="Ir al Carrito" className="w-full" />
+            </Link>
+            <Link to="/productos">
+              <Boton texto="Ver Productos" className="w-full" />
+            </Link>
           </div>
         </div>
       </div>

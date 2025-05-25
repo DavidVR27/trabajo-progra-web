@@ -23,7 +23,7 @@ const ProductoCard = ({ producto }) => {
     <div className="producto-card">
       <Link to={`/detalle-producto/${producto.id}`} className="producto-link">
         <div className="producto-imagen">
-          <img src={producto.imagen} alt={producto.nombre} />
+          <img src={producto.imagen} alt={producto.nombre} className="w-24 h-24 object-cover" />
           {producto.descuento > 0 && (
             <span className="descuento-badge">-{producto.descuento}%</span>
           )}
