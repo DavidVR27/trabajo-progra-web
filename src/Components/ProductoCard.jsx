@@ -8,15 +8,20 @@ const ProductoCard = ({ producto }) => {
   const [mostrarCantidad, setMostrarCantidad] = useState(false);
 
   const precioConDescuento = producto.descuento > 0
-    ? producto.precio * (1 - producto.descuento / 100)
+    ? producto.precio * (1 - producto.descuento)
     : producto.precio;
 
   const agregarAlCarrito = (e) => {
-    e.preventDefault(); // Prevenir la navegación al hacer clic en el botón
+    e.preventDefault();
     carritoService.agregarProducto(producto, cantidad);
     alert('Producto agregado al carrito');
     setCantidad(1);
     setMostrarCantidad(false);
+  };
+
+  const iniciarAgregarAlCarrito = (e) => {
+    e.preventDefault();
+    setMostrarCantidad(true);
   };
 
   return (
@@ -25,7 +30,7 @@ const ProductoCard = ({ producto }) => {
         <div className="producto-imagen">
           <img src={producto.imagen} alt={producto.nombre} className="w-24 h-24 object-cover" />
           {producto.descuento > 0 && (
-            <span className="descuento-badge">-{producto.descuento}%</span>
+            <span className="descuento-badge">-{Math.round(producto.descuento * 100)}%</span>
           )}
         </div>
         <div className="producto-info">
@@ -36,11 +41,11 @@ const ProductoCard = ({ producto }) => {
           <div className="producto-precio">
             {producto.descuento > 0 ? (
               <>
-                <span className="precio-original">S/ {producto.precio}</span>
+                <span className="precio-original">S/ {producto.precio.toFixed(2)}</span>
                 <span className="precio-descuento">S/ {precioConDescuento.toFixed(2)}</span>
               </>
             ) : (
-              <span className="precio-normal">S/ {producto.precio}</span>
+              <span className="precio-normal">S/ {producto.precio.toFixed(2)}</span>
             )}
           </div>
         </div>
@@ -58,7 +63,7 @@ const ProductoCard = ({ producto }) => {
         ) : (
           <button 
             className="agregar-carrito-btn"
-            onClick={() => setMostrarCantidad(true)}
+            onClick={iniciarAgregarAlCarrito}
           >
             Añadir al carrito
           </button>

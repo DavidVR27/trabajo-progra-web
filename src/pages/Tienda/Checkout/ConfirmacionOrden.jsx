@@ -1,10 +1,58 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaCheckCircle } from 'react-icons/fa';
 import Boton from '../../../Components/Boton';
+import { carritoService } from '../../../services/carritoService';
 
 const ConfirmacionOrden = () => {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // Obtener datos necesarios del localStorage
+        const carrito = carritoService.obtenerCarrito();
+        const datosEnvio = JSON.parse(localStorage.getItem('datosEnvio') || '{}');
+        const metodoPago = localStorage.getItem('metodoPago') || 'No especificado';
+        const metodoEnvio = localStorage.getItem('metodoEnvio') || 'No especificado';
+
+        // Calcular totales
+        const total = carrito.reduce((acc, item) => {
+            const precioConDescuento = item.descuento 
+                ? item.precio * (1 - item.descuento) 
+                : item.precio;
+            return acc + (precioConDescuento * item.cantidad);
+        }, 0);
+
+        // Crear objeto de orden
+        const nuevaOrden = {
+            id: Date.now(), // Usar timestamp como ID único
+            fecha: new Date().toISOString(),
+            productos: carrito,
+            datosEnvio,
+            metodoPago,
+            metodoEnvio,
+            resumenCompra: {
+                total,
+                productos: carrito.map(item => ({
+                    nombre: item.nombre,
+                    cantidad: item.cantidad,
+                    precio: item.descuento 
+                        ? (item.precio * (1 - item.descuento)).toFixed(2)
+                        : item.precio.toFixed(2)
+                }))
+            }
+        };
+
+        // Obtener órdenes existentes y añadir la nueva
+        const ordenesExistentes = JSON.parse(localStorage.getItem('ordenes') || '[]');
+        ordenesExistentes.push(nuevaOrden);
+        localStorage.setItem('ordenes', JSON.stringify(ordenesExistentes));
+
+        // Limpiar el carrito después de guardar la orden
+        carritoService.vaciarCarrito();
+        localStorage.removeItem('datosEnvio');
+        localStorage.removeItem('metodoPago');
+        localStorage.removeItem('metodoEnvio');
+    }, []);
 
     return (
         <div className="container mx-auto px-4 py-16">

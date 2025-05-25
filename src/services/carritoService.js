@@ -108,7 +108,7 @@ export const carritoService = {
     const carrito = carritoService.obtenerCarrito();
     return carrito.reduce((total, producto) => {
       const precio = producto.descuento > 0 
-        ? producto.precio * (1 - producto.descuento / 100)
+        ? producto.precio * (1 - producto.descuento)
         : producto.precio;
       return total + (precio * producto.cantidad);
     }, 0);
