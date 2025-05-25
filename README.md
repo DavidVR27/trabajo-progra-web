@@ -42,9 +42,18 @@
 **Alumno 7 - Fabio Mendoza**  
 - Implementación de almacenamiento usando Local Storage
 
+---
 
-### Notas sobre el control de versiones
+## Notas sobre el control de versiones
 
-Durante el desarrollo del proyecto, cada integrante del equipo trabajó en su propia rama (branch) individual en lugar de hacer commits directamente sobre `main` para garantizar estabilidad y minimizar errores. 
+Durante el desarrollo del proyecto, cada integrante del equipo trabajó en su propia rama (branch) individual en lugar de hacer commits directamente sobre `main`, con el fin de mantener la estabilidad del proyecto y minimizar conflictos.
 
-Una vez completadas y probadas sus funcionalidades, las ramas individuales fueron **mergeadas (fusionadas)** a la rama principal `main`, integrando así los aportes de cada alumno.
+Una vez completadas y validadas sus respectivas funcionalidades, las ramas fueron **fusionadas (mergeadas)** a la rama principal (`main`), integrando así el trabajo colaborativo del equipo.
+
+### Ramas utilizadas por cada alumno:
+
+- **David Vilela**: `main`  
+- **Fabio Mendoza**: `LocalStorage2`  
+- **Jeremin Roman**: `final`  
+- **Jose Misagel**: `misagel`  
+- **Saghir Syed**: `trabajo-progra-web`
