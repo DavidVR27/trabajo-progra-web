@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Checkout from './pages/Tienda/Checkout/Checkout';
 import Login from './pages/Auth/Login/Login';
 import Registro from './pages/Auth/Registro/Registro';
+import Recuperar from './pages/Auth/Recuperar/Recuperar';
+import CambiarContraseniaConCodigo from './pages/Auth/Cambiar-Contrasenia-Con-Codigo/CambiarContraseniaConCodigo';
+import MisOrdenes from './pages/Tienda/Mis-Ordenes/MisOrdenes';
 import Inicio from './pages/Tienda/Inicio/Inicio';
 import Navbar from './pages/Tienda/Inicio/Navbar';
 import CarritoPage from './pages/Tienda/Carrito/CarritoPage';
@@ -35,6 +38,9 @@ const App = () => {
             <Route path="/" element={<Inicio />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
+            <Route path="/recuperar" element={<Recuperar />} />
+            <Route path="/cambiar-contrasenia-con-codigo" element={<CambiarContraseniaConCodigo />} />
+            <Route path="/mis-ordenes" element={<MisOrdenes />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/carritopage" element={<CarritoPage />} />
             <Route path="/categorias" element={<Categorias />} />

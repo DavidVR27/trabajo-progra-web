@@ -1,92 +1,114 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Boton from '../../../Components/Boton';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Heading from "../../../Components/Misagel/Heading";
+import Boton from "../../../Components/Misagel/Boton";
 
 const Login = () => {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
+  const navigate = useNavigate();
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
+  const [correoElectronico, setCorreoElectronico] = useState("");
+  const [contrasenia, setContrasenia] = useState("");
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Aquí iría la lógica de autenticación
-        // Por ahora, solo guardamos el email en localStorage
-        localStorage.setItem('usuario', formData.email);
-        navigate('/');
-    };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // VALIDAR QUE EL CORREO SEA UN CORREO VALIDO
+    const patronDeCorreoElectronico = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!patronDeCorreoElectronico.test(correoElectronico)) {
+      alert("Por favor, ingresa un correo electrónico válido.");
+      return;
+    }
+    // VALIDAR QUE LA CONTRASEÑA TENGA AL MENOS 8 CARACTERES
+    if (contrasenia.length < 8) {
+      alert("La contraseña debe tener al menos 8 caracteres.");
+      return;
+    }
 
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
-                <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                        Iniciar Sesión
-                    </h2>
-                </div>
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    <div className="rounded-md shadow-sm -space-y-px">
-                        <div>
-                            <label htmlFor="email" className="sr-only">Correo electrónico</label>
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-[#FE624C] focus:border-[#FE624C] focus:z-10 sm:text-sm"
-                                placeholder="Correo electrónico"
-                                value={formData.email}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="password" className="sr-only">Contraseña</label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-[#FE624C] focus:border-[#FE624C] focus:z-10 sm:text-sm"
-                                placeholder="Contraseña"
-                                value={formData.password}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                    </div>
+    const usuarios = JSON.parse(localStorage.getItem("usuarios") || "[]");
 
-                    <div>
-                        <Boton
-                            texto="Iniciar Sesión"
-                            onClick={handleSubmit}
-                            className="w-full"
-                        />
-                    </div>
+    const usuario = usuarios.find((usuario) => usuario.correo === correoElectronico);
+    if (usuario === undefined) {
+      alert("El correo no está registrado. Por favor, regístrate.");
+      return;
+    }
 
-                    <div className="text-center">
-                        <p className="text-sm text-gray-600">
-                            ¿No tienes una cuenta?{' '}
-                            <button
-                                type="button"
-                                onClick={() => navigate('/registro')}
-                                className="font-medium text-[#FE624C] hover:text-[#FE624C]"
-                            >
-                                Regístrate
-                            </button>
-                        </p>
-                    </div>
-                </form>
+    if (usuario.password !== contrasenia) {
+      alert("Contraseña incorrecta. Por favor, inténtalo de nuevo.");
+      return;
+    }
+
+    // GUARDAR EL USUARIO ACTUAL EN LOCALSTORAGE
+    localStorage.setItem("usuario", JSON.stringify(usuario));
+
+    navigate("/");
+
+    alert("Iniciando sesión...");
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-4 bg-white p-8 rounded-lg shadow-md">
+        <Heading texto="Iniciar Sesión" />
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="rounded-md shadow-sm -space-y-px">
+            <div>
+              <label htmlFor="email" className="sr-only">
+                Correo electrónico
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-[#FE624C] focus:border-[#FE624C] focus:z-10 sm:text-sm"
+                placeholder="Correo electrónico"
+                value={correoElectronico}
+                onChange={(e) => {
+                  setCorreoElectronico(e.target.value);
+                }}
+              />
             </div>
+            <div>
+              <label htmlFor="password" className="sr-only">
+                Contraseña
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-[#FE624C] focus:border-[#FE624C] focus:z-10 sm:text-sm"
+                placeholder="Contraseña"
+                value={contrasenia}
+                onChange={(e) => {
+                  setContrasenia(e.target.value);
+                }}
+              />
+            </div>
+          </div>
+
+          <Boton texto="Iniciar Sesión" onClick={handleSubmit} className="w-full" type="submit" />
+        </form>
+
+        <div className="text-center">
+          <p className="text-sm text-gray-600">
+            ¿No tienes una cuenta?{" "}
+            <button type="button" onClick={() => navigate("/registro")} className="font-medium text-[#FE624C] hover:text-[#FE624C]">
+              Regístrate
+            </button>
+          </p>
         </div>
-    );
+
+        <div className="text-center">
+          <p className="text-sm text-gray-600">
+            ¿Olvidaste tu contraseña?{" "}
+            <button type="button" onClick={() => navigate("/recuperar")} className="font-medium text-[#FE624C] hover:text-[#FE624C]">
+              Recupérala aquí
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Login;
