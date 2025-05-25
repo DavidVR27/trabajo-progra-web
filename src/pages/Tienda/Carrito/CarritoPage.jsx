@@ -3,6 +3,7 @@ import Carrito from './Carrito';
 import './CarritoPage.css';
 import Boton from '../../../Components/Boton';
 import { useNavigate } from 'react-router-dom';
+import { carritoService } from '../../../services/carritoService';
 
 const CarritoPage = () => {
   const navigate = useNavigate();
@@ -12,8 +13,8 @@ const CarritoPage = () => {
   const [cantidadItems, setCantidadItems] = useState(0);
 
   useEffect(() => {
-    // Obtener el carrito del localStorage
-    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+    // Obtener el carrito usando el servicio
+    const carrito = carritoService.obtenerCarrito();
     setCantidadItems(carrito.length);
   }, []);
 

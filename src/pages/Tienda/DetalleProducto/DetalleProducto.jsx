@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { obtenerProductoPorId } from '../../../services/productos';
+import { carritoService } from '../../../services/carritoService';
 import './DetalleProducto.css';
 
 const DetalleProducto = () => {
@@ -33,16 +34,7 @@ const DetalleProducto = () => {
   }, [id]);
 
   const agregarAlCarrito = () => {
-    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
-    const productoEnCarrito = carrito.find(p => p.id === producto.id);
-    
-    if (productoEnCarrito) {
-      productoEnCarrito.cantidad += cantidad;
-    } else {
-      carrito.push({ ...producto, cantidad });
-    }
-    
-    localStorage.setItem('carrito', JSON.stringify(carrito));
+    carritoService.agregarProducto(producto, cantidad);
     alert('Producto agregado al carrito');
   };
 

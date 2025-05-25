@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Boton from '../../../Components/Boton';
-
-const CARRITO_KEY = 'carrito';
-const GUARDADOS_KEY = 'guardados';
+import { carritoService } from '../../../services/carritoService'; // ajusta la ruta si es necesario
 
 const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDescuento, actualizarCantidadItems }) => {
-  // Leer productos del carrito y guardados desde localStorage
-  const [productos, setProductos] = useState(() => {
-    const guardados = JSON.parse(localStorage.getItem(CARRITO_KEY)) || [];
-    return guardados.map(producto => ({
+  const [productos, setProductos] = useState([]);
+  const [guardados, setGuardados] = useState([]);
+
+  // Cargar datos del carrito al iniciar
+  useEffect(() => {
+    const cargados = carritoService.obtenerCarrito();
+    const formateados = cargados.map(producto => ({
       ...producto,
       checked: producto.checked !== undefined ? producto.checked : true,
       cantidad: producto.cantidad || 1,
@@ -19,108 +20,83 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
       nombre: producto.nombre || 'Producto sin nombre',
       descripcion: producto.descripcion || ''
     }));
-  });
+    setProductos(formateados);
+  }, []);
 
-  const [guardados, setGuardados] = useState(() => {
-    const guardados = JSON.parse(localStorage.getItem(GUARDADOS_KEY)) || [];
-    return guardados.map(producto => ({
-      ...producto,
-      cantidad: producto.cantidad || 1,
-      precio: producto.precio || 0,
-      descuento: producto.descuento || 0,
-      precioConDescuento: producto.descuento ? (producto.precio || 0) * (1 - producto.descuento) : (producto.precio || 0),
-      imagen: producto.imagen || 'https://via.placeholder.com/100',
-      nombre: producto.nombre || 'Producto sin nombre',
-      descripcion: producto.descripcion || ''
-    }));
-  });
-
-  // Guardar productos y guardados en localStorage cada vez que cambian
-  useEffect(() => {
-    localStorage.setItem(CARRITO_KEY, JSON.stringify(productos));
-  }, [productos]);
-  useEffect(() => {
-    localStorage.setItem(GUARDADOS_KEY, JSON.stringify(guardados));
-  }, [guardados]);
+  // Actualizar carrito en localStorage solo cuando se modifica un producto específico
+  const actualizarCarrito = (productoId, cambios) => {
+    setProductos(prev => {
+      const nuevosProductos = prev.map(p => 
+        p.id === productoId ? { ...p, ...cambios } : p
+      );
+      carritoService.vaciarCarrito();
+      nuevosProductos.forEach(prod => {
+        carritoService.agregarProducto(prod, prod.cantidad);
+      });
+      return nuevosProductos;
+    });
+  };
 
   // Calcular totales
-  const total = productos.reduce(
-    (acc, producto) => acc + (producto.checked ? producto.precioConDescuento * producto.cantidad : 0),
-    0
-  );
-  const totalProductos = productos.reduce(
-    (acc, producto) => acc + (producto.checked ? producto.cantidad : 0),
-    0
-  );
-  const totalDescuento = productos.reduce(
-    (acc, producto) => acc + (producto.checked ? (producto.precio - producto.precioConDescuento) * producto.cantidad : 0),
-    0
-  );
+  const total = productos.reduce((acc, p) => acc + (p.checked ? p.precioConDescuento * p.cantidad : 0), 0);
+  const totalProductos = productos.reduce((acc, p) => acc + (p.checked ? p.cantidad : 0), 0);
+  const totalDescuento = productos.reduce((acc, p) => acc + (p.checked ? (p.precio - p.precioConDescuento) * p.cantidad : 0), 0);
 
+  // Enviar totales al componente padre
   useEffect(() => {
     actualizarTotal && actualizarTotal(total);
     actualizarTotalProductos && actualizarTotalProductos(totalProductos);
     actualizarTotalDescuento && actualizarTotalDescuento(totalDescuento);
-    actualizarCantidadItems && actualizarCantidadItems(productos.filter(producto => producto.checked).length);
-  }, [total, totalProductos, totalDescuento, productos, actualizarTotal, actualizarTotalProductos, actualizarTotalDescuento, actualizarCantidadItems]);
+    actualizarCantidadItems && actualizarCantidadItems(productos.filter(p => p.checked).length);
+  }, [total, totalProductos, totalDescuento, productos]);
 
   const toggleCheck = (id) => {
-    setProductos((prevProductos) =>
-      prevProductos.map((producto) =>
-        producto.id === id
-          ? { ...producto, checked: !producto.checked }
-          : producto
-      )
-    );
+    actualizarCarrito(id, { checked: !productos.find(p => p.id === id).checked });
   };
 
   const incrementarCantidad = (id) => {
-    setProductos((prevProductos) =>
-      prevProductos.map((producto) =>
-        producto.id === id && producto.checked
-          ? { ...producto, cantidad: producto.cantidad + 1 }
-          : producto
-      )
-    );
+    const producto = productos.find(p => p.id === id);
+    if (producto && producto.checked) {
+      actualizarCarrito(id, { cantidad: producto.cantidad + 1 });
+    }
   };
 
   const disminuirCantidad = (id) => {
-    setProductos((prevProductos) =>
-      prevProductos.map((producto) =>
-        producto.id === id && producto.cantidad > 1 && producto.checked
-          ? { ...producto, cantidad: producto.cantidad - 1 }
-          : producto
-      )
-    );
+    const producto = productos.find(p => p.id === id);
+    if (producto && producto.checked && producto.cantidad > 1) {
+      actualizarCarrito(id, { cantidad: producto.cantidad - 1 });
+    }
   };
 
   const eliminarProducto = (id) => {
-    setProductos((prevProductos) =>
-      prevProductos.filter((producto) => producto.id !== id)
-    );
+    setProductos(prev => {
+      const nuevosProductos = prev.filter(p => p.id !== id);
+      carritoService.vaciarCarrito();
+      nuevosProductos.forEach(prod => {
+        carritoService.agregarProducto(prod, prod.cantidad);
+      });
+      return nuevosProductos;
+    });
   };
 
-  // Guardar para después
   const moverAGuardados = (id) => {
-    setProductos((prevProductos) => {
-      const prod = prevProductos.find(p => p.id === id);
-      if (prod) setGuardados(prev => [...prev, prod]);
-      return prevProductos.filter(p => p.id !== id);
+    setProductos(prev => {
+      const producto = prev.find(p => p.id === id);
+      if (producto) setGuardados(g => [...g, producto]);
+      return prev.filter(p => p.id !== id);
     });
   };
 
-  // Devolver al carrito
   const devolverAlCarrito = (id) => {
-    setGuardados((prevGuardados) => {
-      const prod = prevGuardados.find(p => p.id === id);
-      if (prod) setProductos(prev => [...prev, prod]);
-      return prevGuardados.filter(p => p.id !== id);
+    setGuardados(prev => {
+      const producto = prev.find(p => p.id === id);
+      if (producto) setProductos(p => [...p, producto]);
+      return prev.filter(p => p.id !== id);
     });
   };
 
-  // Eliminar de guardados
   const eliminarGuardado = (id) => {
-    setGuardados((prevGuardados) => prevGuardados.filter(p => p.id !== id));
+    setGuardados(prev => prev.filter(p => p.id !== id));
   };
 
   return (
@@ -200,6 +176,7 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
           ))
         )}
       </div>
+
       {/* Guardados para después */}
       <div>
         <h2 className="text-xl font-bold mb-2">Guardados para después</h2>

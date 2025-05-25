@@ -4,11 +4,17 @@ const HistorialPedidos = () => {
   const [ordenes, setOrdenes] = useState([]);
 
   useEffect(() => {
-    const ordenesGuardadas = JSON.parse(localStorage.getItem('ordenes') || '[]');
-    setOrdenes(ordenesGuardadas);
+    try {
+      const ordenesGuardadas = JSON.parse(localStorage.getItem('ordenes') || '[]');
+      console.log('Órdenes recuperadas:', ordenesGuardadas);
+      setOrdenes(ordenesGuardadas);
+    } catch (error) {
+      console.error('Error al cargar las órdenes:', error);
+      setOrdenes([]);
+    }
   }, []);
 
-  if (ordenes.length === 0) {
+  if (!ordenes || ordenes.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8 text-center">
         <h1 className="text-2xl font-bold mb-4">Historial de Pedidos</h1>
@@ -27,10 +33,12 @@ const HistorialPedidos = () => {
               <div>
                 <span className="font-semibold">Fecha:</span> {new Date(orden.fecha).toLocaleString()}
               </div>
-              <div className="font-bold text-[#FE624C]">Total: S/ {orden.resumenCompra.total.toFixed(2)}</div>
+              <div className="font-bold text-[#FE624C]">
+                Total: S/ {orden.resumenCompra?.total?.toFixed(2) || '0.00'}
+              </div>
             </div>
             <ul className="mb-2">
-              {orden.resumenCompra.productos.map((prod, i) => (
+              {orden.resumenCompra?.productos?.map((prod, i) => (
                 <li key={i} className="text-gray-700">
                   {prod.nombre} x{prod.cantidad} - S/ {prod.precio}
                 </li>

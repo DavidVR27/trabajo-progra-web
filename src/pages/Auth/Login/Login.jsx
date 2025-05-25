@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Heading from "../../../Components/Misagel/Heading";
-import Boton from "../../../Components/Misagel/Boton";
+import Boton from "../../../components/Misagel/Boton";
 
 const Login = () => {
   const navigate = useNavigate();

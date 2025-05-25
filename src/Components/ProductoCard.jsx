@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { carritoService } from '../services/carritoService';
 import './ProductoCard.css';
 
 const ProductoCard = ({ producto }) => {
@@ -12,16 +13,7 @@ const ProductoCard = ({ producto }) => {
 
   const agregarAlCarrito = (e) => {
     e.preventDefault(); // Prevenir la navegación al hacer clic en el botón
-    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
-    const productoEnCarrito = carrito.find(p => p.id === producto.id);
-    
-    if (productoEnCarrito) {
-      productoEnCarrito.cantidad += cantidad;
-    } else {
-      carrito.push({ ...producto, cantidad });
-    }
-    
-    localStorage.setItem('carrito', JSON.stringify(carrito));
+    carritoService.agregarProducto(producto, cantidad);
     alert('Producto agregado al carrito');
     setCantidad(1);
     setMostrarCantidad(false);

@@ -94,43 +94,48 @@ const Checkout = () => {
             return;
         }
 
-        // Obtener los productos del carrito
-        const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
-        
-        // Crear el resumen de la compra
-        const resumenCompra = {
-            productos: carrito,
-            subtotal: total,
-            descuento: totalDescuento,
-            costoEnvio: costoEnvio,
-            total: total - totalDescuento + costoEnvio,
-            fecha: new Date().toISOString()
-        };
+        try {
+            // Obtener los productos del carrito
+            const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+            
+            // Crear el resumen de la compra
+            const resumenCompra = {
+                productos: carrito,
+                subtotal: total,
+                descuento: totalDescuento,
+                costoEnvio: costoEnvio,
+                total: total - totalDescuento + costoEnvio,
+                fecha: new Date().toISOString()
+            };
 
-        // Aquí iría la lógica para guardar la orden
-        const orden = {
-            ...formData,
-            metodoPago,
-            metodoEnvio,
-            resumenCompra,
-            fecha: new Date().toISOString()
-        };
+            // Crear la orden
+            const orden = {
+                ...formData,
+                metodoPago,
+                metodoEnvio,
+                resumenCompra,
+                fecha: new Date().toISOString()
+            };
 
-        // Guardar la orden en localStorage
-        const ordenes = JSON.parse(localStorage.getItem('ordenes') || '[]');
-        ordenes.push(orden);
-        localStorage.setItem('ordenes', JSON.stringify(ordenes));
+            // Guardar la orden en localStorage
+            const ordenes = JSON.parse(localStorage.getItem('ordenes') || '[]');
+            ordenes.push(orden);
+            localStorage.setItem('ordenes', JSON.stringify(ordenes));
 
-        // Limpiar el carrito
-        localStorage.removeItem('carrito');
+            // Limpiar el carrito
+            localStorage.removeItem('carrito');
 
-        // Mostrar el modal de agradecimiento
-        setShowModal(true);
+            // Mostrar el modal de agradecimiento
+            setShowModal(true);
 
-        // Redirigir después de 3 segundos
-        setTimeout(() => {
-            navigate('/confirmacion-orden');
-        }, 3000);
+            // Redirigir después de 3 segundos
+            setTimeout(() => {
+                navigate('/confirmacion-orden');
+            }, 3000);
+        } catch (error) {
+            console.error('Error al procesar la orden:', error);
+            alert('Hubo un error al procesar tu orden. Por favor, intenta nuevamente.');
+        }
     };
 
     return (
