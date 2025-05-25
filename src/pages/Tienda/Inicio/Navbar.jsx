@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FaShoppingCart, FaUser, FaUserPlus } from 'react-icons/fa';
 import './Navbar.css'; // Archivo CSS para estilos
 
 const CATEGORIAS_POR_DEFECTO = [
@@ -30,28 +31,28 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="navbar">
+    <nav className="navbar font-sans">
       {/* Sección izquierda */}
       <div className="navbar-left">
-        <h1 className="navbar-logo">Mi-Tiendita</h1>
+        <h1 className="navbar-logo text-2xl font-bold">Mi-Tiendita</h1>
         <ul className="navbar-links">
-          <li><Link to="/">Home</Link></li>
+          <li><Link to="/" className="hover:text-[#FE624C] transition-colors">Home</Link></li>
           <li className="navbar-categorias-dropdown">
-            <span>Categorías ▼</span>
+            <span className="hover:text-[#FE624C] transition-colors">Categorías ▼</span>
             <ul className="dropdown-menu">
               {categorias.length === 0 && <li>No hay categorías</li>}
               {categorias.map((cat) => (
                 <li key={cat.id || cat.nombre}>
-                  <Link to={`/categoria/${cat.nombre}`}>{cat.nombre}</Link>
+                  <Link to={`/categoria/${cat.nombre}`} className="hover:text-[#FE624C] transition-colors">{cat.nombre}</Link>
                 </li>
               ))}
             </ul>
           </li>
-          <li><a href="#productos">Productos</a></li>
-          <li><a href="#nosotros">Nosotros</a></li>
-          <li><Link to="/historial-pedidos">Historial de pedidos</Link></li>
-          <li><Link to="/perfil">Mi perfil</Link></li>
-          <li><Link to="/admin/dashboard">Admin</Link></li>
+          <li><a href="#productos" className="hover:text-[#FE624C] transition-colors">Productos</a></li>
+          <li><a href="#nosotros" className="hover:text-[#FE624C] transition-colors">Nosotros</a></li>
+          <li><Link to="/historial-pedidos" className="hover:text-[#FE624C] transition-colors">Historial de pedidos</Link></li>
+          <li><Link to="/perfil" className="hover:text-[#FE624C] transition-colors">Mi perfil</Link></li>
+          <li><Link to="/admin/dashboard" className="hover:text-[#FE624C] transition-colors">Admin</Link></li>
         </ul>
       </div>
 
@@ -66,17 +67,17 @@ const Navbar = () => {
 
       {/* Sección derecha */}
       <div className="navbar-right flex gap-4 items-center">
-        <Link to="/carritopage" className="flex flex-col items-center cursor-pointer" title="Mi carrito">
-          <button className="navbar-icon" style={{ cursor: 'pointer' }}>🛒</button>
-          <span style={{ fontSize: '0.75rem' }}>Mi carrito</span>
+        <Link to="/carritopage" className="flex flex-col items-center cursor-pointer hover:text-[#FE624C] transition-colors" title="Mi carrito">
+          <FaShoppingCart className="text-2xl" />
+          <span className="text-sm">Mi carrito</span>
         </Link>
-        <Link to="/login" className="flex flex-col items-center cursor-pointer" title="Iniciar sesión">
-          <button className="navbar-icon" style={{ cursor: 'pointer' }}>👤</button>
-          <span style={{ fontSize: '0.75rem' }}>Iniciar sesión</span>
+        <Link to="/login" className="flex flex-col items-center cursor-pointer hover:text-[#FE624C] transition-colors" title="Iniciar sesión">
+          <FaUser className="text-2xl" />
+          <span className="text-sm">Iniciar sesión</span>
         </Link>
-        <Link to="/registro" className="flex flex-col items-center cursor-pointer" title="Registrar usuario">
-          <button className="navbar-icon" style={{ cursor: 'pointer' }}>📝</button>
-          <span style={{ fontSize: '0.75rem' }}>Registrar</span>
+        <Link to="/registro" className="flex flex-col items-center cursor-pointer hover:text-[#FE624C] transition-colors" title="Registrar usuario">
+          <FaUserPlus className="text-2xl" />
+          <span className="text-sm">Registrar</span>
         </Link>
       </div>
     </nav>
