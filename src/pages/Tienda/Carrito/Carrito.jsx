@@ -128,13 +128,13 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
     const cantidadItems = productos.filter(p => p.checked).length;
 
     // Enviar los totales al componente padre
-    if (actualizarTotal) actualizarTotal(total);
-    if (actualizarTotalProductos) actualizarTotalProductos(totalProductos);
-    if (actualizarTotalDescuento) actualizarTotalDescuento(totalDescuento);
-    if (actualizarCantidadItems) actualizarCantidadItems(cantidadItems);
+    if (actualizarTotal) actualizarTotal(total); // total
+    if (actualizarTotalProductos) actualizarTotalProductos(totalProductos); // productos totales
+    if (actualizarTotalDescuento) actualizarTotalDescuento(totalDescuento); // total descuento
+    if (actualizarCantidadItems) actualizarCantidadItems(cantidadItems); // items total
   }, [productos]);
 
-  // Función para marcar/desmarcar un producto
+  // Función para marcar/desmarcar un producto para el guardado despues
   function toggleCheck(id) {
     // Buscar el producto
     const producto = productos.find(p => p.id === id);
@@ -146,8 +146,11 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
 
   // Función para aumentar la cantidad
   function incrementarCantidad(id) {
+    // Busca en el arreglo productos el que tenga el id igual al que se pasó a la función
     const producto = productos.find(p => p.id === id);
+    // Si el producto existe y está marcado como checked
     if (producto && producto.checked) {
+      // Actualiza la cantidad del producto
       actualizarProductoEnCarrito(id, { cantidad: producto.cantidad + 1 });
     }
   }
@@ -238,10 +241,12 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
       {/* Carrito */}
       <div>
         <h2 className="text-xl font-bold mb-2">Carrito de compras</h2>
+        {/* Si el carrito está vacío */}
         {productos.length === 0 ? (
           <div className="text-center text-gray-500">El carrito está vacío.</div>
-        ) : (
-          productos.map((producto) => (
+        ) : ( 
+          // Si el carrito no está vacío, se muestran los productos
+          productos.map((producto) => ( // Para cada producto se aplica el siguiente estilo:
             <div
               key={producto.id}
               className="bg-white shadow-md rounded-lg p-4 flex items-start w-full mb-2"
@@ -314,7 +319,7 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
       {/* Guardados para después */}
       <div>
         <h2 className="text-xl font-bold mb-2">Guardados para después</h2>
-        {guardados.length === 0 ? (
+        {guardados.length === 0 ? ( // Si no hay productos guardados para después:
           <div className="text-center text-gray-500">No hay productos guardados para después.</div>
         ) : (
           guardados.map((producto) => (
@@ -327,7 +332,7 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
                 <div className="flex items-center justify-between w-full">
                   <h2 className="text-lg font-bold">{producto.nombre}</h2>
                   <div className="text-right">
-                    {producto.descuento ? (
+                    {producto.descuento ? ( // Si el producto tiene descuento:
                       <>
                         <p className="text-gray-400 line-through text-sm">S/ {Number(producto.precio).toFixed(2)}</p>
                         <div className="flex items-center justify-end gap-2">
@@ -335,7 +340,7 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
                           <p className="text-red-500 text-sm bg-red-100 px-2 py-1 rounded">-{Math.round(producto.descuento * 100)}%</p>
                         </div>
                       </>
-                    ) : (
+                    ) : ( // Si el producto no tiene descuento:
                       <p className="text-gray-600 font-bold text-xl">S/ {Number(producto.precio).toFixed(2)}</p>
                     )}
                   </div>

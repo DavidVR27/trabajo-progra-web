@@ -7,16 +7,18 @@ import { carritoService } from '../../../services/carritoService';
 import { FaShoppingCart, FaTruck, FaCreditCard } from 'react-icons/fa';
 
 const CarritoPage = () => {
-  const navigate = useNavigate();
-  const [total, setTotal] = useState(0);
-  const [totalProductos, setTotalProductos] = useState(0);
-  const [totalDescuento, setTotalDescuento] = useState(0);
-  const [cantidadItems, setCantidadItems] = useState(0);
+  const navigate = useNavigate(); // navegar a otras paginas desde el componente
+  // variables de estado que se inicializan en 0
+  const [total, setTotal] = useState(0);  // suma total en soles con descuento
+  const [totalProductos, setTotalProductos] = useState(0); // suma total de productoss
+  const [totalDescuento, setTotalDescuento] = useState(0); // suma total de descuentos
+  const [cantidadItems, setCantidadItems] = useState(0); // cantidad total de productos
 
+  // se ejecuta una sola vez al inicio
   useEffect(() => {
     // Obtener el carrito usando el servicio
-    const carrito = carritoService.obtenerCarrito();
-    setCantidadItems(carrito.length);
+    const carrito = carritoService.obtenerCarrito(); // lee los productos del carrito
+    setCantidadItems(carrito.length); // actualiza la cantidad de productos
   }, []);
 
   return (
