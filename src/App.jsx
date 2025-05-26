@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Checkout from './pages/Tienda/Checkout/Checkout';
 import Login from './pages/Auth/Login/Login';
 import Registro from './pages/Auth/Registro/Registro';
 import Recuperar from './pages/Auth/Recuperar/Recuperar';
@@ -41,7 +40,6 @@ const App = () => {
             <Route path="/recuperar" element={<Recuperar />} />
             <Route path="/cambiar-contrasenia-con-codigo" element={<CambiarContraseniaConCodigo />} />
             <Route path="/mis-ordenes" element={<MisOrdenes />} />
-            <Route path="/checkout" element={<Checkout />} />
             <Route path="/carritopage" element={<CarritoPage />} />
             <Route path="/categorias" element={<Categorias />} />
             <Route path="/busqueda" element={<Busqueda />} />

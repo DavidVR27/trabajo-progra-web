@@ -42,20 +42,20 @@ const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDes
     };
   }
 
-  // Cargar los productos cuando el componente se inicia
-  useEffect(() => {
-    // Obtener productos del carrito
-    const productosCarrito = carritoService.obtenerCarrito();
-    const productosGuardados = carritoService.obtenerGuardados();
-    
-    // Dar formato a los productos
-    const productosFormateados = productosCarrito.map(formatearProducto);
-    const guardadosFormateados = productosGuardados.map(formatearProducto);
+    // Cargar los productos cuando el componente se inicia
+    useEffect(() => {
+      // Obtener productos del carrito
+      const productosCarrito = carritoService.obtenerCarrito();
+      const productosGuardados = carritoService.obtenerGuardados();
+      
+      // Dar formato a los productos
+      const productosFormateados = productosCarrito.map(formatearProducto);
+      const guardadosFormateados = productosGuardados.map(formatearProducto);
 
-    // Guardar en el estado
-    setProductos(productosFormateados);
-    setGuardados(guardadosFormateados);
-  }, []);
+      // Guardar en el estado
+      setProductos(productosFormateados);
+      setGuardados(guardadosFormateados);
+    }, []);
 
   // Función para actualizar un producto en el carrito
   function actualizarProductoEnCarrito(productoId, cambios) {
