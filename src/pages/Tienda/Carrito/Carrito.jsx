@@ -1,116 +1,237 @@
 import React, { useState, useEffect } from 'react';
 import Boton from '../../../Components/Boton';
-import { carritoService } from '../../../services/carritoService'; // ajusta la ruta si es necesario
+import { carritoService } from '../../../services/carritoService';
 
+// Componente Carrito - Maneja la lista de productos en el carrito y los guardados
 const Carrito = ({ actualizarTotal, actualizarTotalProductos, actualizarTotalDescuento, actualizarCantidadItems }) => {
+  // Estados para guardar los productos
   const [productos, setProductos] = useState([]);
   const [guardados, setGuardados] = useState([]);
 
-  // Cargar datos del carrito al iniciar
+  // Función para dar formato a un producto
+  function formatearProducto(producto) {
+    // Si no hay imagen, usar una imagen por defecto
+    let imagen = producto.imagen;
+    if (!imagen) {
+      imagen = 'https://via.placeholder.com/100';
+    }
+
+    // Si no hay nombre, usar un nombre por defecto
+    let nombre = producto.nombre;
+    if (!nombre) {
+      nombre = 'Producto sin nombre';
+    }
+
+    // Calcular el precio con descuento
+    let precioConDescuento = producto.precio;
+    if (producto.descuento) {
+      precioConDescuento = producto.precio * (1 - producto.descuento);
+    }
+
+    // Retornar el producto formateado
+    return {
+      ...producto,
+      checked: producto.checked === undefined ? true : producto.checked,
+      cantidad: producto.cantidad || 1,
+      precio: producto.precio || 0,
+      descuento: producto.descuento || 0,
+      precioConDescuento: precioConDescuento,
+      imagen: imagen,
+      nombre: nombre,
+      descripcion: producto.descripcion || ''
+    };
+  }
+
+  // Cargar los productos cuando el componente se inicia
   useEffect(() => {
-    const cargados = carritoService.obtenerCarrito();
-    const guardados = carritoService.obtenerGuardados();
+    // Obtener productos del carrito
+    const productosCarrito = carritoService.obtenerCarrito();
+    const productosGuardados = carritoService.obtenerGuardados();
     
-    const formateados = cargados.map(producto => ({
-      ...producto,
-      checked: producto.checked !== undefined ? producto.checked : true,
-      cantidad: producto.cantidad || 1,
-      precio: producto.precio || 0,
-      descuento: producto.descuento || 0,
-      precioConDescuento: producto.descuento ? (producto.precio || 0) * (1 - producto.descuento) : (producto.precio || 0),
-      imagen: producto.imagen || 'https://via.placeholder.com/100',
-      nombre: producto.nombre || 'Producto sin nombre',
-      descripcion: producto.descripcion || ''
-    }));
+    // Dar formato a los productos
+    const productosFormateados = productosCarrito.map(formatearProducto);
+    const guardadosFormateados = productosGuardados.map(formatearProducto);
 
-    const formateadosGuardados = guardados.map(producto => ({
-      ...producto,
-      checked: producto.checked !== undefined ? producto.checked : true,
-      cantidad: producto.cantidad || 1,
-      precio: producto.precio || 0,
-      descuento: producto.descuento || 0,
-      precioConDescuento: producto.descuento ? (producto.precio || 0) * (1 - producto.descuento) : (producto.precio || 0),
-      imagen: producto.imagen || 'https://via.placeholder.com/100',
-      nombre: producto.nombre || 'Producto sin nombre',
-      descripcion: producto.descripcion || ''
-    }));
-
-    setProductos(formateados);
-    setGuardados(formateadosGuardados);
+    // Guardar en el estado
+    setProductos(productosFormateados);
+    setGuardados(guardadosFormateados);
   }, []);
 
-  // Actualizar carrito en localStorage solo cuando se modifica un producto específico
-  const actualizarCarrito = (productoId, cambios) => {
-    setProductos(prev => {
-      const nuevosProductos = prev.map(p => 
-        p.id === productoId ? { ...p, ...cambios } : p
-      );
-      carritoService.vaciarCarrito();
-      nuevosProductos.forEach(prod => {
-        carritoService.agregarProducto(prod, prod.cantidad);
-      });
-      return nuevosProductos;
-    });
-  };
+  // Función para actualizar un producto en el carrito
+  function actualizarProductoEnCarrito(productoId, cambios) {
+    // Crear una nueva lista de productos
+    let nuevosProductos = [];
+    
+    // Recorrer todos los productos
+    for (let i = 0; i < productos.length; i++) {
+      let producto = productos[i];
+      
+      // Si es el producto que queremos actualizar
+      if (producto.id === productoId) {
+        // Crear una copia del producto con los cambios
+        producto = { ...producto, ...cambios };
+      }
+      
+      // Agregar el producto a la nueva lista
+      nuevosProductos.push(producto);
+    }
 
-  // Calcular totales
-  const total = productos.reduce((acc, p) => acc + (p.checked ? p.precioConDescuento * p.cantidad : 0), 0);
-  const totalProductos = productos.reduce((acc, p) => acc + (p.checked ? p.cantidad : 0), 0);
-  const totalDescuento = productos.reduce((acc, p) => acc + (p.checked ? (p.precio - p.precioConDescuento) * p.cantidad : 0), 0);
+    // Actualizar el carrito en el almacenamiento
+    carritoService.vaciarCarrito();
+    for (let producto of nuevosProductos) {
+      carritoService.agregarProducto(producto, producto.cantidad);
+    }
 
-  // Enviar totales al componente padre
+    // Actualizar el estado
+    setProductos(nuevosProductos);
+  }
+
+  // Calcular el total del carrito
+  function calcularTotal() {
+    let total = 0;
+    for (let producto of productos) {
+      if (producto.checked) {
+        total = total + (producto.precioConDescuento * producto.cantidad);
+      }
+    }
+    return total;
+  }
+
+  // Calcular el total de productos
+  function calcularTotalProductos() {
+    let total = 0;
+    for (let producto of productos) {
+      if (producto.checked) {
+        total = total + producto.cantidad;
+      }
+    }
+    return total;
+  }
+
+  // Calcular el total de descuentos
+  function calcularTotalDescuento() {
+    let total = 0;
+    for (let producto of productos) {
+      if (producto.checked) {
+        let descuento = (producto.precio - producto.precioConDescuento) * producto.cantidad;
+        total = total + descuento;
+      }
+    }
+    return total;
+  }
+
+  // Actualizar los totales cuando cambian los productos
   useEffect(() => {
-    actualizarTotal && actualizarTotal(total);
-    actualizarTotalProductos && actualizarTotalProductos(totalProductos);
-    actualizarTotalDescuento && actualizarTotalDescuento(totalDescuento);
-    actualizarCantidadItems && actualizarCantidadItems(productos.filter(p => p.checked).length);
-  }, [total, totalProductos, totalDescuento, productos]);
+    const total = calcularTotal();
+    const totalProductos = calcularTotalProductos();
+    const totalDescuento = calcularTotalDescuento();
+    const cantidadItems = productos.filter(p => p.checked).length;
 
-  const toggleCheck = (id) => {
-    actualizarCarrito(id, { checked: !productos.find(p => p.id === id).checked });
-  };
+    // Enviar los totales al componente padre
+    if (actualizarTotal) actualizarTotal(total);
+    if (actualizarTotalProductos) actualizarTotalProductos(totalProductos);
+    if (actualizarTotalDescuento) actualizarTotalDescuento(totalDescuento);
+    if (actualizarCantidadItems) actualizarCantidadItems(cantidadItems);
+  }, [productos]);
 
-  const incrementarCantidad = (id) => {
+  // Función para marcar/desmarcar un producto
+  function toggleCheck(id) {
+    // Buscar el producto
+    const producto = productos.find(p => p.id === id);
+    if (producto) {
+      // Cambiar el estado de checked
+      actualizarProductoEnCarrito(id, { checked: !producto.checked });
+    }
+  }
+
+  // Función para aumentar la cantidad
+  function incrementarCantidad(id) {
     const producto = productos.find(p => p.id === id);
     if (producto && producto.checked) {
-      actualizarCarrito(id, { cantidad: producto.cantidad + 1 });
+      actualizarProductoEnCarrito(id, { cantidad: producto.cantidad + 1 });
     }
-  };
+  }
 
-  const disminuirCantidad = (id) => {
+  // Función para disminuir la cantidad
+  function disminuirCantidad(id) {
     const producto = productos.find(p => p.id === id);
     if (producto && producto.checked && producto.cantidad > 1) {
-      actualizarCarrito(id, { cantidad: producto.cantidad - 1 });
+      actualizarProductoEnCarrito(id, { cantidad: producto.cantidad - 1 });
     }
-  };
+  }
 
-  const eliminarProducto = (id) => {
-    setProductos(prev => {
-      const nuevosProductos = prev.filter(p => p.id !== id);
-      carritoService.vaciarCarrito();
-      nuevosProductos.forEach(prod => {
-        carritoService.agregarProducto(prod, prod.cantidad);
-      });
-      return nuevosProductos;
-    });
-  };
+  // Función para eliminar un producto
+  function eliminarProducto(id) {
+    // Filtrar el producto a eliminar
+    const nuevosProductos = productos.filter(p => p.id !== id);
+    
+    // Actualizar el carrito en el almacenamiento
+    carritoService.vaciarCarrito();
+    for (let producto of nuevosProductos) {
+      carritoService.agregarProducto(producto, producto.cantidad);
+    }
 
-  const moverAGuardados = (id) => {
-    const { carrito, guardados } = carritoService.moverAGuardados(id);
-    setProductos(carrito);
-    setGuardados(guardados);
-  };
+    // Actualizar el estado
+    setProductos(nuevosProductos);
+  }
+ 
+  // Función para mover un producto a guardados
+  function moverAGuardados(id) {
+    // Obtener el producto que queremos mover
+    const productoAMover = productos.find(p => p.id === id);
+    if (!productoAMover) return;
 
-  const devolverAlCarrito = (id) => {
-    const { carrito, guardados } = carritoService.devolverAlCarrito(id);
-    setProductos(carrito);
-    setGuardados(guardados);
-  };
+    // Filtrar el producto del carrito
+    const nuevosProductos = productos.filter(p => p.id !== id);
+    
+    // Agregar el producto a guardados
+    const nuevosGuardados = [...guardados, productoAMover];
 
-  const eliminarGuardado = (id) => {
+    // Actualizar el carrito en el almacenamiento
+    carritoService.vaciarCarrito();
+    for (let producto of nuevosProductos) {
+      carritoService.agregarProducto(producto, producto.cantidad);
+    }
+
+    // Actualizar los estados
+    setProductos(nuevosProductos);
+    setGuardados(nuevosGuardados);
+
+    // Actualizar el servicio
+    carritoService.moverAGuardados(id);
+  }
+
+  // Función para devolver un producto al carrito
+  function devolverAlCarrito(id) {
+    // Obtener el producto que queremos devolver
+    const productoADevolver = guardados.find(p => p.id === id);
+    if (!productoADevolver) return;
+
+    // Filtrar el producto de guardados
+    const nuevosGuardados = guardados.filter(p => p.id !== id);
+    
+    // Agregar el producto al carrito
+    const nuevosProductos = [...productos, productoADevolver];
+
+    // Actualizar el carrito en el almacenamiento
+    carritoService.vaciarCarrito();
+    for (let producto of nuevosProductos) {
+      carritoService.agregarProducto(producto, producto.cantidad);
+    }
+
+    // Actualizar los estados
+    setProductos(nuevosProductos);
+    setGuardados(nuevosGuardados);
+
+    // Actualizar el servicio
+    carritoService.devolverAlCarrito(id);
+  }
+
+  // Función para eliminar un producto guardado
+  function eliminarGuardado(id) {
     const nuevosGuardados = carritoService.eliminarGuardado(id);
     setGuardados(nuevosGuardados);
-  };
+  }
 
   return (
     <div className="flex flex-col space-y-8">
