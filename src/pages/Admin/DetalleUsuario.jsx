@@ -25,7 +25,6 @@ const DetalleUsuario = () => {
       <div className="bg-white rounded shadow p-6 mb-6">
         <div><span className="font-semibold">Nombre:</span> {usuario.nombre} {usuario.apellido}</div>
         <div><span className="font-semibold">Correo:</span> {usuario.correo}</div>
-        <div><span className="font-semibold">Estado:</span> {usuario.activo ? 'Activo' : 'Desactivado'}</div>
       </div>
       <h2 className="text-xl font-semibold mb-2">Órdenes del usuario</h2>
       {ordenes.length === 0 ? (
