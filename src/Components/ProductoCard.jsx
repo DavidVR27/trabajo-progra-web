@@ -57,7 +57,7 @@ const ProductoCard = ({ producto }) => {
             <span>{cantidad}</span>
             <button onClick={() => setCantidad(cantidad + 1)}>+</button>
             <button className="confirmar-cantidad" onClick={agregarAlCarrito}>
-              Confirmar
+              Ok
             </button>
           </div>
         ) : (

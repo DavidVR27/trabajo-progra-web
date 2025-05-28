@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Boton from '../../../Components/Boton';
 import ProductoCard from '../../../components/ProductoCard';
 import { cargarProductos } from '../../../services/productos';
 
 // Datos simulados para series
-const seriesNuevas = [
-  { id: 1, nombre: 'Serie A', descripcion: 'Nueva colección A', imagen: 'https://via.placeholder.com/150' },
-  { id: 2, nombre: 'Serie B', descripcion: 'Nueva colección B', imagen: 'https://via.placeholder.com/150' },
-  { id: 3, nombre: 'Serie C', descripcion: 'Nueva colección C', imagen: 'https://via.placeholder.com/150' },
-];
 
 // Datos de categorías
 const categorias = [
@@ -140,21 +134,6 @@ const Inicio = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
           {productosMasVendidos.map((producto) => (
             <ProductoCard key={producto.id} producto={producto} />
-          ))}
-        </div>
-      </div>
-
-      {/* Series nuevas */}
-      <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-4 text-center">Series Nuevas</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {seriesNuevas.map((serie) => (
-            <div key={serie.id} className="bg-white rounded shadow p-6 flex flex-col items-center">
-              <img src={serie.imagen} alt={serie.nombre} className="w-32 h-32 object-cover mb-2" />
-              <div className="font-semibold text-lg">{serie.nombre}</div>
-              <div className="text-gray-600 mb-2">{serie.descripcion}</div>
-              <Link to="/categorias" className="text-[#FE624C] hover:underline">Ver productos</Link>
-            </div>
           ))}
         </div>
       </div>

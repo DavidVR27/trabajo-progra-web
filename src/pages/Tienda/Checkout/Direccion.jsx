@@ -20,11 +20,11 @@ const Direccion = () => {
 
     useEffect(() => {
         // Obtener datos del carrito
-        const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
-        const totalCarrito = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
-        const descuentoCarrito = carrito.reduce((acc, item) => {
+        const carrito = JSON.parse(localStorage.getItem('carrito') || '[]'); // Se lee del localStorage y se convierte de texto a objeto
+        const totalCarrito = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0); // Se calcula el total del carrito
+        const descuentoCarrito = carrito.reduce((acc, item) => { 
             if (item.descuento) {
-                return acc + (item.precio * item.descuento * item.cantidad);
+                return acc + (item.precio * item.descuento * item.cantidad); // Se calcula el descuento del carrito
             }
             return acc;
         }, 0);
