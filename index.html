@@ -5,62 +5,77 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <link rel = "stylesheet" href = "indexStyle.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mi-Tiendita</title>
+    <title> Foodly </title>
   </head>
   <body>
     <div id="root"></div>
 
     <header class = "header">
-      <section class = "section__first">
-        <div class="firstSection__item"> Mi-Tiendita </div>
-        <div class="firstSection__item">
-          <label class="section__label">
-            <input type="text" placeholder="Buscar un producto...">
-          </label>
-        </div>
-        <div class="firstSection__item">
-          <div class="firstSection__subfirst"> Carrito 🛒 </div>
-          <div class="firstSection__subsecond"> Usuario 👤 </div> 
-        </div>
-      </section>
-
 
       <nav class="header__nav">
         
-        <ul>
-          <li class="header__nav-item">
-            <input type="checkbox" class="header__categories-option" id="categories-options">
-            <label for="categories-options" class="header__categories-box" role="button"> = Categorias </label>
-            
-            <div class = "header__categories-options" id="categories-products"> 
-                <button class="header__button" onclick="mostrarProductos('desayuno')"> Desayuno </button>
-                <button class="header__button" onclick="mostrarProductos('complementos')"> Complementos </button>
-                <button class="header__button" onclick="mostrarProductos('insumos')"> Insumos </button>
-                <button class="header__button" onclick="mostrarProductos('otros')"> Otros </button>
+        <section class = "section__first">
+
+          <div class="firstSection__item">
+            <button class="header__open-sidebar" id="header__open-sidebar"> =  </button>
+            <div class="subFirst-item"> Foodly </div>
+          </div>
+
+          <div class="firstSection__item">
+            <label class="section__label">
+            <input id = "searcher" type="text" placeholder="Buscar un producto...">
+            </label>
+          </div>
+
+          <div class="firstSection__item">
+            <div class="firstSection__subfirst"> Carrito 🛒 </div>
+            <div class="firstSection__subsecond"> Usuario 👤 </div> 
+          </div>
+
+        </section>
+
+        <div class="header__sidebar" id="header__sidebar">
+            <button class="header__close-sidebar" id="header__close-sidebar"> X </button>
+            <div class="header__sidebar-container">
+              <div class="header__sidebar-item">
+                <input type="checkbox" class="header__categories-option" id="categories-options">
+                <label for="categories-options" id = "header__categories" class="header__categories-box" role="button"> Categorias </label>
+                
+                <div class = "header__categories-options" id="categories-products"> 
+                    <button class="header__button" onclick="mostrarProductos('desayuno')"> Desayuno </button>
+                    <button class="header__button" onclick="mostrarProductos('complementos')"> Complementos </button>
+                    <button class="header__button" onclick="mostrarProductos('insumos')"> Insumos </button>
+                    <button class="header__button" onclick="mostrarProductos('otros')"> Otros </button>
+                </div>
+              </div>
+
+              <div class="header__sidebar-item">
+                <a href="#"> Productos </a>
+              </div>
+              <div class="header__sidebar-item"> 
+                <a href="#"> Nosotros </a>
+              </div>
             </div>
-          </li>
+        </div>
 
-          <li class="header__nav-item">
-            <a href="#"> Productos </a>
-          </li>
-
-          <li class="header__nav-item">
-            <a href="#"> Nosotros </a>
-          </li>
-        </ul>
       </nav>
     </header>
 
     <main id = "main">
+      
+
       <section class="section__categories">
-        <h2> Explora las categorias </h2>
-        <div class="images-container" id="products-section"></div>
+        <fieldset>
+          <legend> Explora las Categorías </legend>
+            <div class="images-container" id="products-section"></div>
+        </fieldset>
       </section>
 
       <section class="section__best-sellers">
-        <h2> Lo más vendido</h2>
-        <div class="images-container" id="products-best-sellers"></div>
-
+        <fieldset>
+          <legend>  Lo más vendido </legend>
+          <div class="images-container" id="products-best-sellers"></div>
+        </fieldset>
       </section>
     </main>
 
