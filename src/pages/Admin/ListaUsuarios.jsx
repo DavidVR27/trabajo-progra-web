@@ -10,12 +10,12 @@ const ListaUsuarios = () => {
     setUsuarios(usuariosGuardados);
   }, []);
 
-  const handleToggleActivo = (id) => {
-    const nuevosUsuarios = usuarios.map(u =>
-      u.id === id ? { ...u, activo: !u.activo } : u
-    );
-    setUsuarios(nuevosUsuarios);
-    localStorage.setItem('usuarios', JSON.stringify(nuevosUsuarios));
+  const handleEliminarUsuario = (id) => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+      const usuariosActualizados = usuarios.filter(u => u.id !== id);
+      localStorage.setItem('usuarios', JSON.stringify(usuariosActualizados));
+      setUsuarios(usuariosActualizados);
+    }
   };
 
   return (
@@ -29,7 +29,6 @@ const ListaUsuarios = () => {
             <tr>
               <th className="py-2 px-4 border-b">Nombre</th>
               <th className="py-2 px-4 border-b">Correo</th>
-              <th className="py-2 px-4 border-b">Estado</th>
               <th className="py-2 px-4 border-b">Acciones</th>
             </tr>
           </thead>
@@ -38,12 +37,9 @@ const ListaUsuarios = () => {
               <tr key={u.id}>
                 <td className="py-2 px-4 border-b">{u.nombre} {u.apellido}</td>
                 <td className="py-2 px-4 border-b">{u.correo}</td>
-                <td className="py-2 px-4 border-b">{u.activo ? 'Activo' : 'Desactivado'}</td>
                 <td className="py-2 px-4 border-b flex gap-2">
-                  <button onClick={() => handleToggleActivo(u.id)} className={`px-3 py-1 rounded text-white ${u.activo ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}>
-                    {u.activo ? 'Desactivar' : 'Activar'}
-                  </button>
                   <button onClick={() => navigate(`/admin/detalle-usuario/${u.id}`)} className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">Ver detalle</button>
+                  <button onClick={() => handleEliminarUsuario(u.id)} className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Eliminar</button>
                 </td>
               </tr>
             ))}
