@@ -11,7 +11,8 @@ const DetalleUsuario = () => {
     const user = usuarios.find(u => u.id === id);
     setUsuario(user);
     const todasOrdenes = JSON.parse(localStorage.getItem('ordenes') || '[]');
-    const ordenesUsuario = todasOrdenes.filter(o => o.correo === user?.correo);
+    const correoUsuario = user?.correo?.trim().toLowerCase();
+    const ordenesUsuario = todasOrdenes.filter(o => o.correo?.trim().toLowerCase() === correoUsuario);
     setOrdenes(ordenesUsuario);
   }, [id]);
 
@@ -27,18 +28,18 @@ const DetalleUsuario = () => {
         <div><span className="font-semibold">Correo:</span> {usuario.correo}</div>
       </div>
       <h2 className="text-xl font-semibold mb-2">Órdenes del usuario</h2>
-      {ordenes.length === 0 ? (
-        <div className="text-gray-500">Este usuario no tiene órdenes registradas.</div>
-      ) : (
+      {ordenes && ordenes.length > 0 ? (
         <ul className="space-y-2">
           {ordenes.map((orden, idx) => (
             <li key={idx} className="bg-gray-100 rounded p-4">
-              <div><span className="font-semibold">Fecha:</span> {new Date(orden.fecha).toLocaleString()}</div>
-              <div><span className="font-semibold">Total:</span> S/ {orden.resumenCompra.total.toFixed(2)}</div>
-              <div><span className="font-semibold">Productos:</span> {orden.resumenCompra.productos.map(p => `${p.nombre} x${p.cantidad}`).join(', ')}</div>
+              <div><span className="font-semibold">Fecha:</span> {orden.fecha ? new Date(orden.fecha).toLocaleString() : 'Sin fecha'}</div>
+              <div><span className="font-semibold">Total:</span> S/ {orden.resumenCompra?.total?.toFixed(2) ?? '0.00'}</div>
+              <div><span className="font-semibold">Productos:</span> {orden.resumenCompra?.productos?.map(p => `${p.nombre} x${p.cantidad}`).join(', ') ?? 'Sin productos'}</div>
             </li>
           ))}
         </ul>
+      ) : (
+        <div className="text-gray-500">Este usuario no tiene órdenes registradas.</div>
       )}
     </div>
   );
