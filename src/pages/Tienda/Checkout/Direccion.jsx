@@ -5,6 +5,7 @@ import { FaUser, FaShoppingCart, FaCheck, FaTruck, FaCreditCard } from 'react-ic
 
 const Direccion = () => {
     const navigate = useNavigate();
+    // Se guarda la informacion del formulario en un estado
     const [formData, setFormData] = useState({
         nombre: '',
         apellido: '',
@@ -35,21 +36,62 @@ const Direccion = () => {
     }, []);
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        // Obtener el nombre y valor del campo que se está escribiendo
+        const nombreCampo = e.target.name;
+        const valorCampo = e.target.value;
+
+        // Si es código postal o teléfono, solo permitir números
+        if (nombreCampo === 'codigoPostal' || nombreCampo === 'telefono') {
+            // Verificar si el valor contiene solo números
+            let esSoloNumeros = true;
+            for (let i = 0; i < valorCampo.length; i++) {
+                if (isNaN(valorCampo[i])) {
+                    esSoloNumeros = false;
+                    break;
+                }
+            }
+            // Si no son solo números, no actualizar el campo
+            if (!esSoloNumeros) {
+                return;
+            }
+        }
+
+        // Quitar espacios al inicio y final
+        const valorSinEspacios = valorCampo.trim();
+
+        // Actualizar el estado del formulario
+        setFormData({
+            ...formData,
+            [nombreCampo]: valorSinEspacios
+        });
     };
 
     const validarFormulario = () => {
-        const camposRequeridos = ['nombre', 'apellido', 'ciudad', 'departamento', 'direccion', 'codigoPostal', 'telefono'];
-        const camposFaltantes = camposRequeridos.filter(campo => !formData[campo]);
+        // Lista de campos que deben estar llenos
+        const camposObligatorios = ['nombre', 'apellido', 'ciudad', 'departamento', 'direccion', 'codigoPostal', 'telefono'];
         
-        if (camposFaltantes.length > 0) {
-            alert('Por favor complete todos los campos requeridos');
+        // Revisar cada campo obligatorio
+        for (let campo of camposObligatorios) {
+            // Si el campo está vacío o solo tiene espacios
+            if (!formData[campo] || formData[campo].trim() === '') {
+                alert('Por favor complete todos los campos requeridos');
+                return false;
+            }
+        }
+
+        // Validar código postal (debe tener 6 números)
+        if (formData.codigoPostal.length !== 6) {
+            alert('El código postal debe tener 6 números');
             return false;
         }
+
+        // Validar teléfono (debe tener 9 números)
+        if (formData.telefono.length !== 9) {
+            alert('El teléfono debe tener 9 números');
+            return false;
+        }
+
+        // Si todo está bien, retornar true
         return true;
     };
 
