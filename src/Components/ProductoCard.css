@@ -21,8 +21,9 @@
 
 .producto-imagen {
   position: relative;
-  width: 100%;
-  padding-top: 100%; /* Aspect ratio 1:1 */
+  width: 30%;
+  padding-top: 30%; /* Aspect ratio 1:1 pero más pequeño */
+  margin: 0 auto;
 }
 
 .producto-imagen img {
