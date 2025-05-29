@@ -5,9 +5,11 @@ import Boton from '../../../Components/Boton';
 import { useNavigate } from 'react-router-dom';
 import { carritoService } from '../../../services/carritoService';
 import { FaShoppingCart, FaTruck, FaCreditCard } from 'react-icons/fa';
+import { useAuth } from '../../../context/AuthContext';
 
 const CarritoPage = () => {
   const navigate = useNavigate(); // navegar a otras paginas desde el componente
+  const { usuario } = useAuth();
   // variables de estado que se inicializan en 0
   const [total, setTotal] = useState(0);  // suma total en soles con descuento
   const [totalProductos, setTotalProductos] = useState(0); // suma total de productoss
@@ -20,6 +22,15 @@ const CarritoPage = () => {
     const carrito = carritoService.obtenerCarrito(); // lee los productos del carrito
     setCantidadItems(carrito.length); // actualiza la cantidad de productos
   }, []);
+
+  const handleProcederPago = () => {
+    if (!usuario) {
+      alert('Debes iniciar sesión para proceder con el pago');
+      navigate('/login');
+      return;
+    }
+    navigate('/tienda/checkout/direccion');
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -103,8 +114,8 @@ const CarritoPage = () => {
                 </div>
                 <div className="mt-6">
                   <Boton
-                    texto="Proceder al Pago"
-                    onClick={() => navigate('/tienda/checkout/direccion')} 
+                    texto={usuario ? "Proceder al Pago" : "Iniciar sesión para continuar"}
+                    onClick={handleProcederPago}
                     className="w-full py-3 text-lg"
                   />
                 </div>

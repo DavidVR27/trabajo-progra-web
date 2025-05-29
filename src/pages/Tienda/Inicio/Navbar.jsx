@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FaShoppingCart, FaUser, FaUserPlus } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaShoppingCart, FaUser, FaUserPlus, FaSignOutAlt } from 'react-icons/fa';
+import { useAuth } from '../../../context/AuthContext';
 import './Navbar.css'; // Archivo CSS para estilos
 
 const CATEGORIAS_POR_DEFECTO = [
@@ -11,6 +12,8 @@ const CATEGORIAS_POR_DEFECTO = [
 
 const Navbar = () => {
   const [categorias, setCategorias] = useState([]);
+  const { usuario, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const cargarCategorias = () => {
@@ -29,6 +32,11 @@ const Navbar = () => {
       window.removeEventListener('categoriasActualizadas', cargarCategorias);
     };
   }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <nav className="navbar font-sans">
@@ -71,14 +79,33 @@ const Navbar = () => {
           <FaShoppingCart className="text-2xl" />
           <span className="text-sm">Mi carrito</span>
         </Link>
-        <Link to="/login" className="flex flex-col items-center cursor-pointer hover:text-[#FE624C] transition-colors" title="Iniciar sesión">
-          <FaUser className="text-2xl" />
-          <span className="text-sm">Iniciar sesión</span>
-        </Link>
-        <Link to="/registro" className="flex flex-col items-center cursor-pointer hover:text-[#FE624C] transition-colors" title="Registrar usuario">
-          <FaUserPlus className="text-2xl" />
-          <span className="text-sm">Registrar</span>
-        </Link>
+        {usuario ? (
+          <>
+            <div className="flex flex-col items-center cursor-pointer hover:text-[#FE624C] transition-colors" title={usuario.nombre}>
+              <FaUser className="text-2xl" />
+              <span className="text-sm">{usuario.nombre}</span>
+            </div>
+            <button 
+              onClick={handleLogout}
+              className="flex flex-col items-center cursor-pointer hover:text-[#FE624C] transition-colors" 
+              title="Cerrar sesión"
+            >
+              <FaSignOutAlt className="text-2xl" />
+              <span className="text-sm">Cerrar sesión</span>
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/login" className="flex flex-col items-center cursor-pointer hover:text-[#FE624C] transition-colors" title="Iniciar sesión">
+              <FaUser className="text-2xl" />
+              <span className="text-sm">Iniciar sesión</span>
+            </Link>
+            <Link to="/registro" className="flex flex-col items-center cursor-pointer hover:text-[#FE624C] transition-colors" title="Registrar usuario">
+              <FaUserPlus className="text-2xl" />
+              <span className="text-sm">Registrar</span>
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );

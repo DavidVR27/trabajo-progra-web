@@ -2,69 +2,83 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Boton from "../../../Components/Misagel/Boton";
 import Heading from "../../../Components/Misagel/Heading";
+import { useAuth } from "../../../context/AuthContext";
 
 const Registro = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const [error, setError] = useState("");
 
   const [nombreCompleto, setNombreCompleto] = useState("");
   const [correoElectronico, setCorreoElectronico] = useState("");
   const [contrasenia, setContrasenia] = useState("");
   const [confirmarContrasenia, setConfirmarContrasenia] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // VALIDAR EL NOMBRE COMPLETO QUE NO SEA VACIO
-    if (nombreCompleto === "") {
-      alert("Por favor, ingresa tu nombre completo.");
-      return;
+    setError("");
+
+    try {
+      // VALIDAR EL NOMBRE COMPLETO QUE NO SEA VACIO
+      if (nombreCompleto === "") {
+        setError("Por favor, ingresa tu nombre completo.");
+        return;
+      }
+      // VALIDAR QUE EL CORREO SEA UN CORREO VALIDO
+      const patronDeCorreoElectronico = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!patronDeCorreoElectronico.test(correoElectronico)) {
+        setError("Por favor, ingresa un correo electrónico válido.");
+        return;
+      }
+      // VALIDAR QUE LA CONTRASEÑA TENGA AL MENOS 8 CARACTERES
+      if (contrasenia.length < 8) {
+        setError("La contraseña debe tener al menos 8 caracteres.");
+        return;
+      }
+      // VALIDAR QUE LA CONTRASEÑA Y LA CONFIRMACION DE LA CONTRASEÑA COINCIDAN
+      if (contrasenia !== confirmarContrasenia) {
+        setError("Las contraseñas no coinciden");
+        return;
+      }
+
+      // VALIDAR QUE EL CORREO NO ESTE REGISTRADO
+      const usuarios = JSON.parse(localStorage.getItem("usuarios") || "[]");
+      if (usuarios.some((usuario) => usuario.correo === correoElectronico)) {
+        setError("El correo ya está registrado. Usa otro o inicia sesión.");
+        return;
+      }
+
+      const usuario = {
+        id: Date.now().toString(),
+        nombre: nombreCompleto,
+        correo: correoElectronico,
+        password: contrasenia,
+      };
+
+      // AGREGAR EL USUARIO A LA LISTA DE USUARIOS
+      usuarios.push(usuario);
+      localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+      // Iniciar sesión automáticamente con el nuevo usuario
+      await login(usuario);
+
+      alert("Registro exitoso. Bienvenido!");
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.error("Error durante el registro:", error);
+      setError("Hubo un error durante el registro. Por favor, intenta nuevamente.");
     }
-    // VALIDAR QUE EL CORREO SEA UN CORREO VALIDO
-    const patronDeCorreoElectronico = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!patronDeCorreoElectronico.test(correoElectronico)) {
-      alert("Por favor, ingresa un correo electrónico válido.");
-      return;
-    }
-    // VALIDAR QUE LA CONTRASEÑA TENGA AL MENOS 8 CARACTERES
-    if (contrasenia.length < 8) {
-      alert("La contraseña debe tener al menos 8 caracteres.");
-      return;
-    }
-    // VALIDAR QUE LA CONTRASEÑA Y LA CONFIRMACION DE LA CONTRASEÑA COINCIDAN
-    if (contrasenia !== confirmarContrasenia) {
-      alert("Las contraseñas no coinciden");
-      return;
-    }
-    // VALIDAR QUE EL CORREO NO ESTE REGISTRADO
-    const usuarios = JSON.parse(localStorage.getItem("usuarios") || "[]");
-    if (usuarios.some((usuario) => usuario.correo === correoElectronico)) {
-      alert("El correo ya está registrado. Usa otro o inicia sesión.");
-      return;
-    }
-
-    const usuario = {
-      id: Date.now().toString(),
-      nombre: nombreCompleto,
-      correo: correoElectronico,
-      password: contrasenia,
-    };
-
-    // GUARDAR EL USUARIO ACTUAL EN LOCALSTORAGE
-    localStorage.setItem("usuario", usuario);
-
-    // AGREGAR EL USUARIO A LA LISTA DE USUARIOS
-    usuarios.push(usuario);
-
-    localStorage.setItem("usuarios", JSON.stringify(usuarios));
-
-    alert("Registro exitoso. Bienvenido!");
-
-    navigate("/");
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
         <Heading texto="Crear cuenta" />
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span className="block sm:inline">{error}</span>
+          </div>
+        )}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
@@ -81,6 +95,7 @@ const Registro = () => {
                 value={nombreCompleto}
                 onChange={(e) => {
                   setNombreCompleto(e.target.value);
+                  setError("");
                 }}
               />
             </div>
@@ -98,6 +113,7 @@ const Registro = () => {
                 value={correoElectronico}
                 onChange={(e) => {
                   setCorreoElectronico(e.target.value);
+                  setError("");
                 }}
               />
             </div>
@@ -115,6 +131,7 @@ const Registro = () => {
                 value={contrasenia}
                 onChange={(e) => {
                   setContrasenia(e.target.value);
+                  setError("");
                 }}
               />
             </div>
@@ -132,6 +149,7 @@ const Registro = () => {
                 value={confirmarContrasenia}
                 onChange={(e) => {
                   setConfirmarContrasenia(e.target.value);
+                  setError("");
                 }}
               />
             </div>

@@ -1,21 +1,43 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const PerfilUsuario = () => {
-  const [usuario, setUsuario] = useState({ nombre: '', apellido: '', correo: '', password: '' });
+  const { usuario, login } = useAuth();
+  const navigate = useNavigate();
   const [editando, setEditando] = useState(false);
   const [nuevoPassword, setNuevoPassword] = useState('');
+  const [datosUsuario, setDatosUsuario] = useState({
+    nombre: '',
+    apellido: '',
+    correo: '',
+    password: ''
+  });
 
   useEffect(() => {
-    const usuarioGuardado = JSON.parse(localStorage.getItem('usuario')) || { nombre: '', apellido: '', correo: '', password: '' };
-    setUsuario(usuarioGuardado);
-  }, []);
+    if (!usuario) {
+      navigate('/login');
+      return;
+    }
+    setDatosUsuario(usuario);
+  }, [usuario, navigate]);
 
   const handleChange = (e) => {
-    setUsuario({ ...usuario, [e.target.name]: e.target.value });
+    setDatosUsuario({ ...datosUsuario, [e.target.name]: e.target.value });
   };
 
   const handleGuardar = () => {
-    localStorage.setItem('usuario', JSON.stringify(usuario));
+    // Actualizar en localStorage
+    const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+    const index = usuarios.findIndex(u => u.correo === usuario.correo);
+    
+    if (index !== -1) {
+      usuarios[index] = { ...datosUsuario };
+      localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    }
+
+    // Actualizar usuario actual
+    login(datosUsuario);
     setEditando(false);
     alert('Datos actualizados correctamente');
   };
@@ -25,11 +47,24 @@ const PerfilUsuario = () => {
       alert('La contraseña debe tener al menos 4 caracteres');
       return;
     }
-    setUsuario({ ...usuario, password: nuevoPassword });
-    localStorage.setItem('usuario', JSON.stringify({ ...usuario, password: nuevoPassword }));
-    setNuevoPassword('');
-    alert('Contraseña actualizada correctamente');
+
+    const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+    const index = usuarios.findIndex(u => u.correo === usuario.correo);
+    
+    if (index !== -1) {
+      const usuarioActualizado = { ...datosUsuario, password: nuevoPassword };
+      usuarios[index] = usuarioActualizado;
+      localStorage.setItem('usuarios', JSON.stringify(usuarios));
+      login(usuarioActualizado);
+      setDatosUsuario(usuarioActualizado);
+      setNuevoPassword('');
+      alert('Contraseña actualizada correctamente');
+    }
   };
+
+  if (!usuario) {
+    return null;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-lg">
@@ -40,7 +75,7 @@ const PerfilUsuario = () => {
           <input
             type="text"
             name="nombre"
-            value={usuario.nombre}
+            value={datosUsuario.nombre}
             onChange={handleChange}
             disabled={!editando}
             className="w-full p-2 border rounded"
@@ -51,7 +86,7 @@ const PerfilUsuario = () => {
           <input
             type="text"
             name="apellido"
-            value={usuario.apellido}
+            value={datosUsuario.apellido}
             onChange={handleChange}
             disabled={!editando}
             className="w-full p-2 border rounded"
@@ -62,16 +97,26 @@ const PerfilUsuario = () => {
           <input
             type="email"
             name="correo"
-            value={usuario.correo}
+            value={datosUsuario.correo}
             onChange={handleChange}
             disabled={!editando}
             className="w-full p-2 border rounded"
           />
         </div>
         {editando ? (
-          <button onClick={handleGuardar} className="bg-green-500 text-white px-4 py-2 rounded">Guardar</button>
+          <button 
+            onClick={handleGuardar} 
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
+          >
+            Guardar
+          </button>
         ) : (
-          <button onClick={() => setEditando(true)} className="bg-blue-500 text-white px-4 py-2 rounded">Editar datos</button>
+          <button 
+            onClick={() => setEditando(true)} 
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+          >
+            Editar datos
+          </button>
         )}
       </div>
       <div className="bg-white rounded shadow p-6 mt-6">
@@ -83,7 +128,12 @@ const PerfilUsuario = () => {
           onChange={e => setNuevoPassword(e.target.value)}
           className="w-full p-2 border rounded mb-2"
         />
-        <button onClick={handleCambiarPassword} className="bg-orange-500 text-white px-4 py-2 rounded">Cambiar contraseña</button>
+        <button 
+          onClick={handleCambiarPassword} 
+          className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors"
+        >
+          Cambiar contraseña
+        </button>
       </div>
     </div>
   );
