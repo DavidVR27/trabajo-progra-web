@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [usuario, setUsuario] = useState(null);
   const [cargando, setCargando] = useState(true);
 
+  // Busca el usuario en el localStorage
   useEffect(() => {
     const cargarUsuario = () => {
       try {
@@ -32,6 +33,7 @@ export const AuthProvider = ({ children }) => {
     cargarUsuario();
   }, []);
 
+  // Guarda la informacion del usuario en el localStorage
   const login = (usuarioData) => {
     try {
       setUsuario(usuarioData);
@@ -42,6 +44,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Elimina el usuario del localStorage
   const logout = () => {
     try {
       setUsuario(null);
