@@ -44,23 +44,21 @@ const Navbar = () => {
       <div className="navbar-left">
         <h1 className="navbar-logo text-2xl font-bold">Mi-Tiendita</h1>
         <ul className="navbar-links">
-          <li><Link to="/" className="hover:text-[#FE624C] transition-colors">Home</Link></li>
+          <li><Link to="/" className="hover:text-white transition-colors">Home</Link></li>
           <li className="navbar-categorias-dropdown">
-            <span className="hover:text-[#FE624C] transition-colors">Categorías ▼</span>
+            <span className="hover:text-white transition-colors">Categorías ▼</span>
             <ul className="dropdown-menu">
               {categorias.length === 0 && <li>No hay categorías</li>}
               {categorias.map((cat) => (
                 <li key={cat.id || cat.nombre}>
-                  <Link to={`/categoria/${cat.nombre}`} className="hover:text-[#FE624C] transition-colors">{cat.nombre}</Link>
+                  <Link to={`/categoria/${cat.nombre}`} className="hover:text-white transition-colors">{cat.nombre}</Link>
                 </li>
               ))}
             </ul>
           </li>
-          <li><a href="#productos" className="hover:text-[#FE624C] transition-colors">Productos</a></li>
-          <li><a href="#nosotros" className="hover:text-[#FE624C] transition-colors">Nosotros</a></li>
-          <li><Link to="/historial-pedidos" className="hover:text-[#FE624C] transition-colors">Historial de pedidos</Link></li>
-          <li><Link to="/perfil" className="hover:text-[#FE624C] transition-colors">Mi perfil</Link></li>
-          <li><Link to="/admin/dashboard" className="hover:text-[#FE624C] transition-colors">Admin</Link></li>
+          <li><Link to="/historial-pedidos" className="hover:text-white transition-colors">Historial de pedidos</Link></li>
+          <li><Link to="/perfil" className="hover:text-white transition-colors">Mi perfil</Link></li>
+          <li><Link to="/admin/dashboard" className="hover:text-white transition-colors">Admin</Link></li>
         </ul>
       </div>
 
@@ -75,19 +73,19 @@ const Navbar = () => {
 
       {/* Sección derecha */}
       <div className="navbar-right flex gap-4 items-center">
-        <Link to="/carritopage" className="flex flex-col items-center cursor-pointer hover:text-[#FE624C] transition-colors" title="Mi carrito">
+        <Link to="/carritopage" className="flex flex-col items-center cursor-pointer hover:text-white transition-colors" title="Mi carrito">
           <FaShoppingCart className="text-2xl" />
           <span className="text-sm">Mi carrito</span>
         </Link>
         {usuario ? (
           <>
-            <div className="flex flex-col items-center cursor-pointer hover:text-[#FE624C] transition-colors" title={usuario.nombre}>
+            <div className="flex flex-col items-center cursor-pointer hover:text-white transition-colors" title={usuario.nombre}>
               <FaUser className="text-2xl" />
               <span className="text-sm">{usuario.nombre}</span>
             </div>
             <button 
               onClick={handleLogout}
-              className="flex flex-col items-center cursor-pointer hover:text-[#FE624C] transition-colors" 
+              className="flex flex-col items-center cursor-pointer hover:text-white transition-colors" 
               title="Cerrar sesión"
             >
               <FaSignOutAlt className="text-2xl" />
@@ -96,11 +94,11 @@ const Navbar = () => {
           </>
         ) : (
           <>
-            <Link to="/login" className="flex flex-col items-center cursor-pointer hover:text-[#FE624C] transition-colors" title="Iniciar sesión">
+            <Link to="/login" className="flex flex-col items-center cursor-pointer hover:text-white transition-colors" title="Iniciar sesión">
               <FaUser className="text-2xl" />
               <span className="text-sm">Iniciar sesión</span>
             </Link>
-            <Link to="/registro" className="flex flex-col items-center cursor-pointer hover:text-[#FE624C] transition-colors" title="Registrar usuario">
+            <Link to="/registro" className="flex flex-col items-center cursor-pointer hover:text-white transition-colors" title="Registrar usuario">
               <FaUserPlus className="text-2xl" />
               <span className="text-sm">Registrar</span>
             </Link>
