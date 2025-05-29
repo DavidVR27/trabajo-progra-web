@@ -26,13 +26,14 @@ import ProductosPorCategoria from './pages/Tienda/Categorias/ProductosPorCategor
 import Direccion from './pages/Tienda/Checkout/Direccion';
 import Pago from './pages/Tienda/Checkout/Pago';
 import ConfirmacionOrden from './pages/Tienda/Checkout/ConfirmacionOrden';
+import Footer from './components/Footer';
 
 const App = () => {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-gray-100 flex flex-col">
         <Navbar />
-        <div className="pt-16"> {/* Espacio para el navbar fijo */}
+        <div className="pt-16 flex-grow"> {/* Agregamos flex-grow para que el contenido ocupe el espacio disponible */}
           <Routes>
             <Route path="/" element={<Inicio />} />
             <Route path="/login" element={<Login />} />
@@ -62,6 +63,7 @@ const App = () => {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
+        <Footer />
       </div>
     </Router>
   );
