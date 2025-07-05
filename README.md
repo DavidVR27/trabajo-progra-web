@@ -57,3 +57,4 @@ Una vez completadas y validadas sus respectivas funcionalidades, las ramas fuero
 - **Jeremin Roman**: `final`  
 - **Jose Misagel**: `misagel`  
 - **Saghir Syed**: `trabajo-progra-web`
+- **David Ramos**: `david-dev`
